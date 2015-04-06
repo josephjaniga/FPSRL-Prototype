@@ -985,3 +985,15 @@ Cmd: compileSnippet
   api=0 type=0 insize=982 outsize=11550 kw=DIRECTIONAL SHADOWS_OFF LIGHTMAP_OFF DIRLIGHTMAP_COMBINED DYNAMICLIGHTMAP_ON _ALPHATEST_ON _NORMALMAP ok=1
 Cmd: compileSnippet
   api=0 type=1 insize=982 outsize=6 kw=DIRECTIONAL SHADOWS_OFF LIGHTMAP_OFF DIRLIGHTMAP_COMBINED DYNAMICLIGHTMAP_ON _ALPHATEST_ON _NORMALMAP ok=1
+Cmd: compileSnippet
+  api=0 type=0 insize=966 outsize=587 kw= ok=1
+Cmd: compileSnippet
+  api=0 type=1 insize=966 outsize=6 kw= ok=1
+Cmd: compileSnippet
+  api=0 type=0 insize=1706 outsize=598 kw=SOFTPARTICLES_OFF ok=1
+Cmd: compileSnippet
+  api=0 type=1 insize=1706 outsize=6 kw=SOFTPARTICLES_OFF ok=1
+Cmd: compileSnippet
+  api=0 type=0 insize=1706 outsize=1401 kw=SOFTPARTICLES_ON ok=1
+Cmd: compileSnippet
+  api=0 type=1 insize=1706 outsize=6 kw=SOFTPARTICLES_ON ok=1

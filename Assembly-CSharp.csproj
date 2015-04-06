@@ -46,6 +46,7 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\Resources\Scripts\BulletTrailDissipation.cs" />
      <Compile Include="Assets\Resources\Scripts\Combat.cs" />
      <Compile Include="Assets\Resources\Scripts\Equipment.cs" />
      <Compile Include="Assets\Resources\Scripts\Health.cs" />
