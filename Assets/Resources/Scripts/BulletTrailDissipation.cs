@@ -18,6 +18,7 @@ public class BulletTrailDissipation : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
+		// fade it out
 		alpha -= Time.deltaTime / 7.5f;
 		Color start = Color.white;
 		start.a = alpha;
@@ -25,6 +26,7 @@ public class BulletTrailDissipation : MonoBehaviour {
 		end.a = alpha;
 		line.SetColors (start, end);
 
+		// destroy it after lifetime
 		if ( Time.time >= startTime + lifeTime ){
 			Destroy (gameObject);
 		}
