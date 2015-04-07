@@ -16,7 +16,7 @@ public class PlayerHealthDisplay : MonoBehaviour {
 	// Update is called once per frame
 	void Update () 
 	{
-		textBox.text = "<b>" + _.playerHealth.currentHealth + " / " + _.playerHealth.maximumHealth + "<color=red> <3 </color></b>";
+		textBox.text = "<b>" + _.playerHealth.currentHealth + " / " + _.playerHealth.maximumHealth + "</b>";
 
 		// update health value
 		slider.minValue = 0;

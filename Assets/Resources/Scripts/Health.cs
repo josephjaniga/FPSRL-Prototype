@@ -32,7 +32,16 @@ public class Health : MonoBehaviour {
 
 	}
 
-	public void Die(){
+	public void Die()
+	{
+		// remove game object
+		Destroy (gameObject);
+
+		// instantiate an explosion
+
+		// handle drops
+
+		//some message?
 		Debug.Log("D-E-D dead bruh");
 	}
 

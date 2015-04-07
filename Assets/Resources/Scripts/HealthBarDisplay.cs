@@ -37,5 +37,11 @@ public class HealthBarDisplay : MonoBehaviour {
 		healthBar.position = gameObject.transform.position + offset;
 		healthBar.LookAt(_.player.transform);
 	}
-	
+
+
+	public void Die()
+	{
+		Destroy (slider.gameObject);	
+	}
+
 }
