@@ -7,10 +7,10 @@ public class DamageForce : MonoBehaviour
     public enum ForceBehavior
     {
         Random,
-        PositiveZ
+        PositiveY
     }
 
-    public ForceBehavior type = ForceBehavior.PositiveZ;
+    public ForceBehavior type = ForceBehavior.PositiveY;
 
     void Start()
     {
@@ -20,45 +20,46 @@ public class DamageForce : MonoBehaviour
 	public void takeDamage(int DamageAmount)
 	{
 
-        Vector3 ForceDirecion;
-        Vector3 TorqueDirecion; 
+        Vector3 ForceDirection;
+        Vector3 TorqueDirection; 
 
         switch (type)
         {
             default:
             case ForceBehavior.Random:
               
-                ForceDirecion = new Vector3(
+                ForceDirection = new Vector3(
                     Random.Range(-1f, 1f),
                     Random.Range(-1f, 1f),
                     Random.Range(-1f, 1f)
                 );
 
-                TorqueDirecion = new Vector3(
+                TorqueDirection = new Vector3(
                     Random.Range(-1f, 1f),
                     Random.Range(-1f, 1f),
                     Random.Range(-1f, 1f)
                 );
 
             break;
-            case ForceBehavior.PositiveZ:
+            case ForceBehavior.PositiveY:
+  
+                ForceDirection = new Vector3(
+                    Random.Range(-1f, 1f),
+                    Random.Range(0.5f, 2f),
+                    Random.Range(-1f, 1f)
+                );
+
+                TorqueDirection = new Vector3(
+                    Random.Range(-1f, 1f),
+                    Random.Range(-1f, 1f),
+                    Random.Range(-1f, 1f)
+                );
                 break;
         }
-        ForceDirecion = new Vector3(
-                Random.Range(-1f, 1f),
-                Random.Range(-1f, 1f),
-                Random.Range(-1f, 1f)
-            );
-
-        TorqueDirecion = new Vector3(
-                Random.Range(-1f, 1f),
-                Random.Range(-1f, 1f),
-                Random.Range(-1f, 1f)
-             );
 
 		// apply damage force
-        gameObject.GetComponent<Rigidbody>().AddForce(randomForceDirecion * 100);
-        gameObject.GetComponent<Rigidbody>().AddTorque(randomTorqueDirecion * 100);
+        gameObject.GetComponent<Rigidbody>().AddForce(ForceDirection * 300);
+        gameObject.GetComponent<Rigidbody>().AddTorque(TorqueDirection * 1000);
 	}
 
 }
