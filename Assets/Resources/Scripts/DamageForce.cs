@@ -58,8 +58,8 @@ public class DamageForce : MonoBehaviour
         }
 
 		// apply damage force
-        gameObject.GetComponent<Rigidbody>().AddForce(ForceDirection * 300);
-        gameObject.GetComponent<Rigidbody>().AddTorque(TorqueDirection * 1000);
+        gameObject.GetComponent<Rigidbody>().AddForce(ForceDirection * 30);
+        gameObject.GetComponent<Rigidbody>().AddTorque(TorqueDirection * 100);
 	}
 
 }

@@ -4,14 +4,22 @@ using System.Collections;
 public static class _
 {
 
-	// the singletons
+	// the player singletons
 	private static GameObject 	_player;
 	private static Health 		_playerHealth;
 	private static Combat		_playerCombat;
 	private static Equipment	_playerEquipment;
 	private static Transform	_playerBulletSpawn;
 	private static GameObject	_playerWeapon;
-	
+	private static Transform	_playerStartPosition;
+
+	// the UI
+	private static GameObject	_ui;
+
+	// the "Groups"
+	// TODO
+
+
 	// player
 	public static GameObject player
 	{
@@ -84,5 +92,37 @@ public static class _
 		}
 	}
 
+	// playerStartPosition
+	public static Transform playerStartPosition
+	{
+		get {
+			if ( _playerStartPosition == null ){
+				_playerStartPosition = GameObject.Find("StartPosition").transform;
+
+				if ( _playerStartPosition == null ){
+					_playerStartPosition = new GameObject().transform;
+					_playerStartPosition.position = Vector3.zero;
+				}
+			}
+			return _playerStartPosition;
+		}
+	}
+
+	// UI
+	public static GameObject ui
+	{
+		get {
+			GameObject temp = GameObject.Find("UI");
+			if ( _ui == null ){
+				if ( temp == null ){
+					temp = GameObject.Instantiate(Resources.Load("Prefabs/UI/UI"), Vector3.zero, Quaternion.identity) as GameObject;
+					temp.name = "UI";
+				}
+				_ui = temp;
+			}
+			return _ui;
+		}
+		set { _ui = value; }
+	}
 
 }
