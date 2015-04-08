@@ -16,113 +16,168 @@ public class Surveyor : MonoBehaviour {
 
 
 	// settings
+    public GeometryShapes shape = GeometryShapes.Perlin_01;
 	public bool foundation = false;
 	public bool circle = false;
 	public bool perlin = false;
 	public bool randomTile = false;
 	public bool tileImperfections = false;
 
-	// Use this for initialization
+    // position helpers
+    Vector3 centerMapOffset = Vector3.zero;
+
 	void Start () {
 
-		Vector3 centerMapOffset = new Vector3( -(maximumMapSize-1)*prefabScaleFactor/2f, 0f, -(maximumMapSize-1)*prefabScaleFactor/2f ); 
-
+		centerMapOffset = new Vector3( -(maximumMapSize-1)*prefabScaleFactor/2f, 0f, -(maximumMapSize-1)*prefabScaleFactor/2f ); 
 		theGrid = new byte[maximumMapSize, maximumMapSize, maximumMapSize];
 
-		// ASSIGN THE DATA
-		for ( int x=0; x<maximumMapSize; x++){
-			for ( int y=0; y<maximumMapSize; y++){
-				for ( int z=0; z<maximumMapSize; z++){
-
-					if ( foundation ){
-						if ( y == 0 ){
-							theGrid[x,y,z] = 1;
-						} else {
-							theGrid[x,y,z] = 0;
-						}
-					} else if ( circle ){
-						if ( Vector3.Distance (new Vector3(x, y, z) * prefabScaleFactor + centerMapOffset, Vector3.zero) > maximumMapSize/2f ){
-							theGrid[x,y,z] = 0;
-						} else {
-							theGrid[x,y,z] = 1;
-						}
-					} else if ( perlin ) {
-					
-						bool conditionOne = Noise.valueAtPoint(new Vector3(x,y,z), 0.25f, 1) > 0.5f && Vector3.Distance (new Vector3(x, y, z) * prefabScaleFactor + centerMapOffset, Vector3.zero) < maximumMapSize/2f;
-						bool conditionTwo = Noise.valueAtPoint(new Vector3(x,y,z), 0.25f, 1) < 0.0125f;
-						if ( conditionTwo ){
-
-							if (x == 0 || x == maximumMapSize-1 ||
-							    y == 0 || y == maximumMapSize-1 ||
-							    z == 0 || z == maximumMapSize-1 ){
-								theGrid[x,y,z] = 2;
-							} else {
-								theGrid[x,y,z] = 1;
-							}
-
-						} else {
-							theGrid[x,y,z] = 0;
-						}
-
-					}
-
-					if ( y > maximumMapSize  ){
-						theGrid[x,y,z] = 0;
-					}
-
-				}
-			}
-		}
-
-		// POPULATE THE OBJECTS - CREATE THE LEVEL GEOMETRY
-		GameObject levelGeometry = new GameObject();
-		levelGeometry.name = "LevelGeometry";
-
-		for ( int x=0; x<maximumMapSize; x++){
-			for ( int y=0; y<maximumMapSize; y++){
-				for ( int z=0; z<maximumMapSize; z++){
-
-
-					if ( theGrid[x,y,z] != 0 && adjacentVisibility(x,y,z) && y > maximumMapSize *.5f && y != maximumMapSize - 1 && x != 0 && z != 0 ){
-
-						GameObject prefabTile;
-
-						if ( randomTile ) { 
-
-							prefabTile = Random.Range (0,2) == 0 ? prefabTileTypeOne : prefabTileTypeTwo; 
-
-						} else {
-							if ( theGrid[x,y,z] == 1 ){
-								prefabTile = prefabTileTypeOne;
-							} else {
-								prefabTile = prefabTileTypeTwo;
-							}
-						}
-
-						Vector3 imperfectionOffset;
-						if ( tileImperfections ){
-							imperfectionOffset = new Vector3(0f, Random.Range (-2, 2) * 0.1f, 0f);
-						} else {
-							imperfectionOffset = Vector3.zero;
-						}
-
-
-						GameObject temp = Instantiate (
-							prefabTile,
-							new Vector3(x, y, z) * prefabScaleFactor + centerMapOffset + imperfectionOffset,
-							Quaternion.identity
-							) as GameObject;
-						temp.name = "Grid["+x+","+y+","+z+"]";
-						temp.transform.SetParent(levelGeometry.transform);
-					}
-					
-				}
-			}
-		}
-
+        assignTheLevelData();
+        populateGeometryFromData();
 
 	}
 
+    public void assignTheLevelData()
+    {
+
+        // ASSIGN THE DATA
+        for (int x = 0; x < maximumMapSize; x++) {
+            for (int y = 0; y < maximumMapSize; y++) {
+                for (int z = 0; z < maximumMapSize; z++) {
+
+                    switch ( shape )
+                    {
+                        default:
+                        case GeometryShapes.Foundation:
+                            if (y == 0)
+                            {
+                                theGrid[x, y, z] = 1;
+                            }
+                            else
+                            {
+                                theGrid[x, y, z] = 0;
+                            }
+                        break;
+                        case GeometryShapes.Sphere:
+                            if (Vector3.Distance(new Vector3(x, y, z) * prefabScaleFactor + centerMapOffset, Vector3.zero) > maximumMapSize / 2f)
+                            {
+                                theGrid[x, y, z] = 0;
+                            }
+                            else
+                            {
+                                theGrid[x, y, z] = 1;
+                            }
+                            break;
+                        case GeometryShapes.Perlin_01:                            
+                            bool conditionOne = Noise.valueAtPoint(new Vector3(x, y, z), 0.25f, 1) > 0.5f && Vector3.Distance(new Vector3(x, y, z) * prefabScaleFactor + centerMapOffset, Vector3.zero) < maximumMapSize / 2f;
+                            bool conditionTwo = Noise.valueAtPoint(new Vector3(x, y, z), 0.25f, 1) < 0.0125f;
+                            if (conditionTwo)
+                            {
+
+                                if (x == 0 || x == maximumMapSize - 1 ||
+                                    y == 0 || y == maximumMapSize - 1 ||
+                                    z == 0 || z == maximumMapSize - 1)
+                                {
+                                    theGrid[x, y, z] = 2;
+                                }
+                                else
+                                {
+                                    theGrid[x, y, z] = 1;
+                                }
+
+                            }
+                            else
+                            {
+                                theGrid[x, y, z] = 0;
+                            }
+                            break;
+                    }
+
+                    /*
+                    if (y > maximumMapSize)
+                    {
+                        theGrid[x, y, z] = 0;
+                    }
+                     * */
+
+                }
+            }
+        }
+
+    }
+
+    public void populateGeometryFromData()
+    {
+        // POPULATE THE OBJECTS - CREATE THE LEVEL GEOMETRY
+        GameObject levelGeometry = new GameObject();
+        levelGeometry.name = "LevelGeometry";
+        for (int x = 0; x < maximumMapSize; x++){
+            for (int y = 0; y < maximumMapSize; y++){
+                for (int z = 0; z < maximumMapSize; z++){
+
+                    // put all of this into a switch
+                    switch (shape)
+                    {
+                        default:
+                        case GeometryShapes.Foundation:
+                            
+                        break;
+                        case GeometryShapes.Sphere:
+                            
+                            break;
+                        case GeometryShapes.Perlin_01:
+                     
+                            break;
+                    }
+
+
+                    if (theGrid[x, y, z] != 0 && adjacentVisibility(x, y, z) && y > maximumMapSize * .5f && y != maximumMapSize - 1 && x != 0 && z != 0)
+                    {
+
+                        GameObject prefabTile;
+
+                        if (randomTile)
+                        {
+
+                            prefabTile = Random.Range(0, 2) == 0 ? prefabTileTypeOne : prefabTileTypeTwo;
+
+                        }
+                        else
+                        {
+                            if (theGrid[x, y, z] == 1)
+                            {
+                                prefabTile = prefabTileTypeOne;
+                            }
+                            else
+                            {
+                                prefabTile = prefabTileTypeTwo;
+                            }
+                        }
+
+                        Vector3 imperfectionOffset;
+                        if (tileImperfections)
+                        {
+                            imperfectionOffset = new Vector3(0f, Random.Range(-2, 2) * 0.1f, 0f);
+                        }
+                        else
+                        {
+                            imperfectionOffset = Vector3.zero;
+                        }
+
+
+                        GameObject temp = Instantiate(
+                            prefabTile,
+                            new Vector3(x, y, z) * prefabScaleFactor + centerMapOffset + imperfectionOffset,
+                            Quaternion.identity
+                            ) as GameObject;
+                        temp.name = "Grid[" + x + "," + y + "," + z + "]";
+                        temp.transform.SetParent(levelGeometry.transform);
+                    }
+
+                }
+            }
+        }
+
+    }
 
 	/**
 	 * USE THIS TO HOLLOW OUT SOLID MASSES
@@ -158,10 +213,17 @@ public class Surveyor : MonoBehaviour {
 	}
 
 
-	public enum VolumeTypes : byte {
+	public enum VolumeTypes : byte 
+    {
 		Empty,
 		Solid
 	}
 
+    public enum GeometryShapes
+    {
+        Foundation,
+        Sphere,
+        Perlin_01
+    }
 
 }
