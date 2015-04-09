@@ -97,11 +97,13 @@ public static class _
 	{
 		get {
 			if ( _playerStartPosition == null ){
-				_playerStartPosition = GameObject.Find("StartPosition").transform;
+				GameObject temp = GameObject.Find("StartPosition");
 
-				if ( _playerStartPosition == null ){
+				if ( temp == null ){
 					_playerStartPosition = new GameObject().transform;
 					_playerStartPosition.position = Vector3.zero;
+				} else {
+					_playerStartPosition = temp.transform;
 				}
 			}
 			return _playerStartPosition;

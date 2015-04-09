@@ -19,7 +19,7 @@ public class HealthBarDisplay : MonoBehaviour {
 	
 		if ( healthBar == null ){
 			GameObject temp = Instantiate(Resources.Load ("Prefabs/UI/HealthBarDisplay"), Vector3.zero, Quaternion.identity) as GameObject;
-			temp.transform.SetParent(GameObject.Find ("WorldSpaceCanvas").transform);
+			temp.transform.SetParent(_.ui.transform.FindChild ("WorldSpaceCanvas").transform);
 			healthBar = temp.GetComponent<RectTransform>();
 			slider = temp.GetComponent<Slider>();
 		}
