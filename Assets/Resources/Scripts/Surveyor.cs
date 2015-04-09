@@ -1,6 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/**
+ * This class deals with generating Minecraft Styled voxel cubes which I hate...
+ */
+
 public class Surveyor : MonoBehaviour {
 
 	// CONCRETE
@@ -17,9 +21,6 @@ public class Surveyor : MonoBehaviour {
 
 	// settings
     public GeometryShapes shape = GeometryShapes.Perlin_01;
-	public bool foundation = false;
-	public bool circle = false;
-	public bool perlin = false;
 	public bool randomTile = false;
 	public bool tileImperfections = false;
 
@@ -114,56 +115,56 @@ public class Surveyor : MonoBehaviour {
             for (int y = 0; y < maximumMapSize; y++){
                 for (int z = 0; z < maximumMapSize; z++){
 
+
+                    GameObject prefabTile;
+
+                    if (randomTile) {
+                        prefabTile = Random.Range(0, 2) == 0 ? prefabTileTypeOne : prefabTileTypeTwo;
+                    } else {
+                        if (theGrid[x, y, z] == 1) {
+                            prefabTile = prefabTileTypeOne;
+                        } else {
+                            prefabTile = prefabTileTypeTwo;
+                        }
+                    }
+
+                    Vector3 imperfectionOffset;
+                    if (tileImperfections) {
+                        imperfectionOffset = new Vector3(0f, Random.Range(-2, 2) * 0.1f, 0f);
+                    } else {
+                        imperfectionOffset = Vector3.zero;
+                    }
+
+                    bool shouldRenderThis = false;
+
                     // put all of this into a switch
                     switch (shape)
                     {
                         default:
                         case GeometryShapes.Foundation:
-                            
-                        break;
+                                if (y == 1) { shouldRenderThis = true; }
+                            break;
                         case GeometryShapes.Sphere:
-                            
+                            if (Vector3.Distance(new Vector3(x, y, z), Vector3.zero) <= maximumMapSize * .5f)
+                            {
+                                shouldRenderThis = true;
+                            }
                             break;
                         case GeometryShapes.Perlin_01:
-                     
+                                if (    theGrid[x, y, z] != 0 &&
+                                        adjacentVisibility(x, y, z) &&
+                                        y > maximumMapSize * .5f &&
+                                        y != maximumMapSize - 1 &&
+                                        x != 0 &&
+                                        z != 0                          )
+                                {
+                                    shouldRenderThis = true;
+                                }
                             break;
                     }
 
-
-                    if (theGrid[x, y, z] != 0 && adjacentVisibility(x, y, z) && y > maximumMapSize * .5f && y != maximumMapSize - 1 && x != 0 && z != 0)
+                    if (shouldRenderThis)
                     {
-
-                        GameObject prefabTile;
-
-                        if (randomTile)
-                        {
-
-                            prefabTile = Random.Range(0, 2) == 0 ? prefabTileTypeOne : prefabTileTypeTwo;
-
-                        }
-                        else
-                        {
-                            if (theGrid[x, y, z] == 1)
-                            {
-                                prefabTile = prefabTileTypeOne;
-                            }
-                            else
-                            {
-                                prefabTile = prefabTileTypeTwo;
-                            }
-                        }
-
-                        Vector3 imperfectionOffset;
-                        if (tileImperfections)
-                        {
-                            imperfectionOffset = new Vector3(0f, Random.Range(-2, 2) * 0.1f, 0f);
-                        }
-                        else
-                        {
-                            imperfectionOffset = Vector3.zero;
-                        }
-
-
                         GameObject temp = Instantiate(
                             prefabTile,
                             new Vector3(x, y, z) * prefabScaleFactor + centerMapOffset + imperfectionOffset,

@@ -3,6 +3,7 @@ using System.Collections;
 
 public class LevelManager : MonoBehaviour {
 
+    public int currentLevelNumber = 0;
 	public GameObject player;
 	public Health playerHealth;
 	public Transform playerStartPosition;
@@ -11,6 +12,16 @@ public class LevelManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+
+        if (currentLevelNumber != null)
+        {
+            currentLevelNumber++;
+        }
+        else
+        {
+            currentLevelNumber = 0;
+        }
+
 		init ();
 	}
 	
@@ -28,7 +39,6 @@ public class LevelManager : MonoBehaviour {
 		
 		// create the UI
 		ui = _.ui;
-
 
 		// get or create start position
 		playerStartPosition = _.playerStartPosition;
