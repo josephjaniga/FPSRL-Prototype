@@ -68,7 +68,7 @@ public class Combat : MonoBehaviour {
 		}
 	}
 
-	public void MakeBulletTrail(RaycastHit hit)
+	public static void MakeBulletTrail(RaycastHit hit)
 	{
 		GameObject prefabTrail = Resources.Load("Prefabs/BulletTrail") as GameObject;
 		GameObject concreteTrail = Instantiate(prefabTrail, _.playerBulletSpawn.position, Quaternion.identity) as GameObject;
