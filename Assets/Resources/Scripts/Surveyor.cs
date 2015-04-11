@@ -16,29 +16,117 @@ public class Surveyor : MonoBehaviour {
 	public Module theNexus;
 	public int maxRooms = 2;
 	public int currentRoomSize = 0;
+
+	public int rejectionsUntilAbandonment = 8;
+	public int rejectionAttempt = 0;
+
+	public int maxRejections = 256;
+	public int currentRejections = 0;
 	
 	public List<Module> openModuleList = new List<Module>();
+
+	public Transform levelGeometry;
+
+	public bool debugRejects = true;
 	
 	// Use this for initialization 
 	void Start () {
 
+		levelGeometry = GameObject.Find ("LevelGeometry").transform;
+
         // make the two peices
-		GameObject concreteOne = Instantiate(getRandomPrefab(), new Vector3(0f,0f,0f), Quaternion.identity) as GameObject;
+		GameObject concreteOne = Instantiate(roomPrefab, new Vector3(0f,0f,0f), Quaternion.identity) as GameObject;
 		theNexus = concreteOne.GetComponent<Module>();
+		concreteOne.transform.SetParent(levelGeometry);
 		openModuleList.Add(theNexus);
 		currentRoomSize++;
 
-		while ( nextOpenJointFromList() != null && currentRoomSize < maxRooms ){
+		while ( nextOpenJointFromList() != null && currentRoomSize < maxRooms && currentRejections < maxRejections ){
+
 			Joint j = nextOpenJointFromList();
 			GameObject newPeice = Instantiate(getRandomPrefab(), new Vector3(5f*currentRoomSize,-5f*currentRoomSize,0f), Quaternion.identity) as GameObject;
 			Module newModule = newPeice.GetComponent<Module>();
 			connectModuleToJoint(newModule, j);
-			if ( newModule.getOpenJoint() != null ){
-				openModuleList.Add(newModule);
+
+			bool allowIt = true;
+
+			// check if its colliding with any of the other "Settled" modules
+			foreach ( Transform moduleGO in levelGeometry ){ // FOR EVERY LEVEL PEICE
+
+				// ignore collision with target
+				if ( moduleGO != j.gameObject.transform.parent.transform ){
+
+					// check all the children and see if there are any collision
+					foreach ( Transform oldChild in moduleGO.transform ){ // FOR EACH COMPONENT
+						Collider oldCol = oldChild.gameObject.GetComponent<Collider>();
+						if ( oldCol != null ){  // IF THAT COMPONENT HAS A COLLIDER
+							foreach ( Transform newChild in newModule.transform ){ // FOR EACH COMPONENT IN NEW
+								Collider newCol = newChild.gameObject.GetComponent<Collider>();
+								if ( newCol != null ){
+									if ( newCol.bounds.Intersects( oldCol.bounds ) ){
+										allowIt = false;
+										break;
+									}
+								}
+							}
+						}
+					}
+
+					// closer than 5f to any other room? STOP
+					//	if ( Vector3.Distance(newPeice.transform.position, moduleGO.position) < 10f ){
+					//		allowIt = false;
+					//	}
+				}
 			}
+
+			// ROOM ADDED SUCCESS
+			if ( allowIt ){
+
+				// add this one to the level geomtry
+				newModule.transform.SetParent(levelGeometry);
+				// add any of its open joints to the open list
+				if ( newModule.getOpenJoint() != null ){
+					openModuleList.Add(newModule);
+				}
+				currentRoomSize++;
+
+				// close the joints
+				j.isOpen = false;
+				newModule.getOpenJoint().isOpen = false;
+
+			} else {
+
+				if ( debugRejects ){
+					foreach ( Transform Child in newPeice.transform ){
+						MeshRenderer mr =  Child.GetComponent<MeshRenderer>();
+						if ( mr != null ){
+							mr.material.color = new Color(1f, 0f, 0f, 0.2f);
+						}
+					}
+					
+					newPeice.transform.SetParent( GameObject.Find ("Rejects").transform );
+					newPeice.transform.Translate ( new Vector3(0f, -2f*(currentRejections+1), 0f) );
+				} else {
+					// delete the new and close off this joint
+					Destroy(newPeice);
+				}
+
+				//	Debug.Log ("Joint : " + j.gameObject.name + " REJECTED: " + newPeice.name);
+
+				currentRejections++;
+				rejectionAttempt++;
+
+				// try so many times... then close for business 
+				if ( rejectionAttempt >= rejectionsUntilAbandonment ){
+					// close that joint
+					j.isOpen = false;
+					rejectionAttempt = 0;
+				}
+			}
+
 			newModule = null;
 			newPeice = null;
-			currentRoomSize++;
+			
 		}
 
 
@@ -90,17 +178,12 @@ public class Surveyor : MonoBehaviour {
 		Vector3 correctiveTranslation = targetJoint.transform.position - newWorkJoint.transform.position;
 		theNewWork.transform.position += correctiveTranslation;
 
-		// close the joints
-		targetJoint.isOpen = false;
-		newWorkJoint.gameObject.GetComponent<Joint>().isOpen = false;
-
 		// debugging
 		GameObject prefabTrail = Resources.Load("Prefabs/_Pointer") as GameObject;
 		GameObject concreteTrail = Instantiate(prefabTrail, Vector3.zero, Quaternion.identity) as GameObject;
 		concreteTrail.transform.SetParent(GameObject.Find ("Effects").transform);
 		concreteTrail.GetComponent<LineRenderer>().SetPosition(0, newWorkJoint.transform.position);
 		concreteTrail.GetComponent<LineRenderer>().SetPosition(1, targetJoint.transform.position);
-
 
 	}
 

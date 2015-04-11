@@ -25,7 +25,6 @@ GameObject:
   m_Component:
   - 4: {fileID: 442836}
   - 33: {fileID: 3312174}
-  - 135: {fileID: 13532150}
   - 23: {fileID: 2388500}
   m_Layer: 0
   m_Name: Marker
@@ -93,7 +92,6 @@ GameObject:
   m_Component:
   - 4: {fileID: 433514}
   - 33: {fileID: 3344098}
-  - 135: {fileID: 13528290}
   - 23: {fileID: 2310764}
   m_Layer: 0
   m_Name: Marker 1
@@ -322,30 +320,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   acceptedModuleTypes: 00000000
   isOpen: 1
---- !u!135 &13528290
-SphereCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 190018}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: .5
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!135 &13532150
-SphereCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 138098}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: .5
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

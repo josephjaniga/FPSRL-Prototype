@@ -91,7 +91,6 @@ GameObject:
   m_Component:
   - 4: {fileID: 443056}
   - 33: {fileID: 3320556}
-  - 135: {fileID: 13512634}
   - 23: {fileID: 2383200}
   m_Layer: 0
   m_Name: Marker 1
@@ -109,7 +108,6 @@ GameObject:
   m_Component:
   - 4: {fileID: 414940}
   - 33: {fileID: 3380678}
-  - 135: {fileID: 13510456}
   - 23: {fileID: 2357276}
   m_Layer: 0
   m_Name: Marker 2
@@ -127,7 +125,6 @@ GameObject:
   m_Component:
   - 4: {fileID: 443464}
   - 33: {fileID: 3325318}
-  - 135: {fileID: 13501106}
   - 23: {fileID: 2343952}
   m_Layer: 0
   m_Name: Marker
@@ -426,42 +423,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   acceptedModuleTypes: 00000000
   isOpen: 1
---- !u!135 &13501106
-SphereCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 195694}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: .5
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!135 &13510456
-SphereCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 162730}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: .5
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!135 &13512634
-SphereCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 159732}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: .5
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
