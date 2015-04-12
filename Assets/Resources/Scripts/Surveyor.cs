@@ -28,6 +28,9 @@ public class Surveyor : MonoBehaviour {
 	public Transform levelGeometry;
 
 	public bool debugRejects = true;
+
+	public Transform alpha = null;
+	public Transform omega = null;
 	
 	// Use this for initialization 
 	void Start () {
@@ -36,6 +39,8 @@ public class Surveyor : MonoBehaviour {
 
         // make the two peices
 		GameObject concreteOne = Instantiate(roomPrefab, new Vector3(0f,0f,0f), Quaternion.identity) as GameObject;
+		alpha = concreteOne.transform;
+		omega = concreteOne.transform;
 		theNexus = concreteOne.GetComponent<Module>();
 		concreteOne.transform.SetParent(levelGeometry);
 		openModuleList.Add(theNexus);
@@ -93,6 +98,7 @@ public class Surveyor : MonoBehaviour {
 				// close the joints
 				j.isOpen = false;
 				newModule.getOpenJoint().isOpen = false;
+				omega = newModule.transform;
 
 			} else {
 
@@ -127,6 +133,21 @@ public class Surveyor : MonoBehaviour {
 			newModule = null;
 			newPeice = null;
 			
+		}	// end generation while
+
+
+		foreach ( Transform Child in alpha ){
+			MeshRenderer mr =  Child.GetComponent<MeshRenderer>();
+			if ( mr != null ){
+				mr.material.color = new Color(0f, 0f, 1f);
+			}
+		}
+
+		foreach ( Transform Child in omega ){
+			MeshRenderer mr =  Child.GetComponent<MeshRenderer>();
+			if ( mr != null ){
+				mr.material.color = new Color(0f, 1f, 0f);
+			}
 		}
 
 
@@ -159,7 +180,7 @@ public class Surveyor : MonoBehaviour {
 	/**
 	 * Takes a New Module and Positions it to match a Target Joint
 	 */
-	public void connectModuleToJoint(Module theNewWork, Joint targetJoint)
+	public void connectModuleToJoint(Module theNewWork, Joint targetJoint, bool debuggingLines = false)
 	{
 		// Target Joint position
 		Transform targetPoint = targetJoint.transform;
@@ -178,12 +199,14 @@ public class Surveyor : MonoBehaviour {
 		Vector3 correctiveTranslation = targetJoint.transform.position - newWorkJoint.transform.position;
 		theNewWork.transform.position += correctiveTranslation;
 
-		// debugging
-		GameObject prefabTrail = Resources.Load("Prefabs/_Pointer") as GameObject;
-		GameObject concreteTrail = Instantiate(prefabTrail, Vector3.zero, Quaternion.identity) as GameObject;
-		concreteTrail.transform.SetParent(GameObject.Find ("Effects").transform);
-		concreteTrail.GetComponent<LineRenderer>().SetPosition(0, newWorkJoint.transform.position);
-		concreteTrail.GetComponent<LineRenderer>().SetPosition(1, targetJoint.transform.position);
+		if ( debuggingLines ){
+			// debugging
+			GameObject prefabTrail = Resources.Load("Prefabs/_Pointer") as GameObject;
+			GameObject concreteTrail = Instantiate(prefabTrail, Vector3.zero, Quaternion.identity) as GameObject;
+			concreteTrail.transform.SetParent(GameObject.Find ("Effects").transform);
+			concreteTrail.GetComponent<LineRenderer>().SetPosition(0, newWorkJoint.transform.position);
+			concreteTrail.GetComponent<LineRenderer>().SetPosition(1, targetJoint.transform.position);
+		}
 
 	}
 

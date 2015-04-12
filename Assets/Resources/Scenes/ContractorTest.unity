@@ -451,7 +451,7 @@ MonoBehaviour:
   - {fileID: 119438, guid: b349960b7bb466b4485aa04991699b0d, type: 2}
   - {fileID: 107214, guid: e874454113dbc47ea8b5d4962cffd4ac, type: 2}
   theNexus: {fileID: 0}
-  maxRooms: 1024
+  maxRooms: 3
   currentRoomSize: 0
   rejectionsUntilAbandonment: 4
   rejectionAttempt: 0
@@ -460,3 +460,5 @@ MonoBehaviour:
   openModuleList: []
   levelGeometry: {fileID: 0}
   debugRejects: 0
+  alpha: {fileID: 0}
+  omega: {fileID: 0}
