@@ -16,8 +16,13 @@ public static class _
 	// the UI
 	private static GameObject	_ui;
 
-	// the "Groups"
-	// TODO
+	// the helpers
+	private static Surveyor		_surveyor;
+	private static GameObject	_mobs;
+	private static GameObject	_effects;
+	private static GameObject	_stuff;
+	private static GameObject	_levelGeometry;
+	private static GameObject	_mapper;
 
 
 	// player
@@ -126,5 +131,130 @@ public static class _
 		}
 		set { _ui = value; }
 	}
+	
+	public static Surveyor surveyor
+	{
+		get {
+			if ( _surveyor == null ){
+				_surveyor = _.mapper.GetComponent<Surveyor>();
+			}
+			return _surveyor;
+		}
+	}
+
+
+	public static GameObject mobs
+	{
+		get {
+			if ( _mobs == null ){
+				GameObject temp = GameObject.Find("Mobs");
+				if ( temp == null ){
+					temp = new GameObject();
+					temp.name = "Mobs";
+				}
+				_mobs = temp;
+			}
+			return _mobs;
+		}
+		set { _mobs = value; }
+	}
+
+	public static GameObject stuff
+	{
+		get {
+			if ( _stuff == null ){
+				GameObject temp = GameObject.Find("Stuff");
+				if ( temp == null ){
+					temp = new GameObject();
+					temp.name = "Stuff";
+				}
+				_stuff = temp;
+			}
+			return _stuff;
+		}
+		set { _stuff = value; }
+	}
+
+	public static GameObject effects
+	{
+		get {
+			if ( _effects == null ){
+				GameObject temp = GameObject.Find("Effects");
+				if ( temp == null ){
+					temp = new GameObject();
+					temp.name = "Effects";
+				}
+				_effects = temp;
+			}
+			return _effects;
+		}
+		set { _effects = value; }
+	}
+
+	public static GameObject levelGeometry
+	{
+		get {
+			if ( _levelGeometry == null ){
+				GameObject temp = GameObject.Find("LevelGeometry");
+				if ( temp == null ){
+					temp = GameObject.Instantiate(Resources.Load("Prefabs/Setup/LevelGeometry"), Vector3.zero, Quaternion.identity) as GameObject;
+					temp.name = "LevelGeometry";
+					_levelGeometry = temp;
+				}
+			}
+			return _levelGeometry;
+		}
+		set { _levelGeometry = value; }
+	}
+
+	public static GameObject mapper
+	{
+		get {
+			if ( _mapper == null ){
+				GameObject temp = GameObject.Find("Mapper");
+				if ( temp == null ){
+					temp = GameObject.Instantiate(Resources.Load("Prefabs/Setup/Mapper"), Vector3.zero, Quaternion.identity) as GameObject;
+					temp.name = "Mapper";
+					_mapper = temp;
+				}
+			}
+			return _mapper;
+		}
+		set { _mapper = value; }
+	}
+
+
+
+
+	// UNNESSECARY???
+	private static GameObject	_gameController;
+	private static LevelManager	_levelManager;
+
+	//	public static GameObject gameController
+	//	{
+	//		get {
+	//			if ( _gameController == null ){
+	//				GameObject temp = GameObject.Find("GameController");
+	//				if ( temp == null ){
+	//					temp = GameObject.Instantiate(Resources.Load("Prefabs/Setup/GameController"), Vector3.zero, Quaternion.identity) as GameObject;
+	//					temp.name = "GameController";
+	//				}
+	//				_gameController = temp;
+	//			}
+	//			return _gameController;
+	//		}
+	//		set { _gameController = value; }
+	//	}
+	
+	//	public static LevelManager levelManager
+	//	{
+	//		get {
+	//			if ( _levelManager == null ){
+	//				_levelManager = _.gameController.GetComponent<LevelManager>();
+	//			}
+	//			return _levelManager;
+	//		}
+	//	}
+
 
 }

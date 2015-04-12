@@ -6,6 +6,8 @@ public class Module : MonoBehaviour {
 
 	public List<Joint> jointList = new List<Joint>();
 
+	public int numberEnemies;
+
 	void Start(){
 
 		init ();
@@ -29,10 +31,12 @@ public class Module : MonoBehaviour {
 		return temp;
 
 	}
-
-
+	
 	public void init()
 	{
+		
+		numberEnemies = Random.Range(0, 2);
+
 		jointList = new List<Joint>();
 
 		foreach ( Transform t in transform ) {
@@ -40,6 +44,49 @@ public class Module : MonoBehaviour {
 				jointList.Add( t.gameObject.GetComponent<Joint>() );
 			}
 		}
+	}
+
+	public Transform getFirstRoomGeometry(){
+		Transform temp = null;
+		foreach (Transform Child in gameObject.transform ){
+			if ( Child.gameObject.GetComponent<Collider>() != null ){
+				temp = Child;
+				break;
+			}
+		}
+		return temp;
+	}
+
+	public void addExit()
+	{
+		Transform Geometry = getFirstRoomGeometry();
+
+		Vector3 localPosition = new Vector3(
+			Random.Range(-.5f, .5f) * Geometry.localScale.x,
+			0f,
+			Random.Range(-.5f, .5f) * Geometry.localScale.z
+		);
+		Vector3 location = gameObject.transform.position + new Vector3(0f, gameObject.transform.localScale.y+0.25f, 0f);
+		GameObject exitPrefab = Resources.Load("Prefabs/Exit") as GameObject;
+		GameObject exit = Instantiate(exitPrefab, location + localPosition, Quaternion.identity) as GameObject;
+
+		exit.transform.SetParent(gameObject.transform);
+	}
+
+	public void spawnEnemy()
+	{
+		Transform Geometry = getFirstRoomGeometry();
+		
+		Vector3 localPosition = new Vector3(
+			Random.Range(-.5f, .5f) * Geometry.localScale.x,
+			Random.Range(0f, 2f) * Geometry.localScale.y,
+			Random.Range(-.5f, .5f) * Geometry.localScale.z
+			);
+		Vector3 location = gameObject.transform.position + new Vector3(0f, gameObject.transform.localScale.y+0.25f, 0f);
+		GameObject enemyPrefab = Resources.Load("Prefabs/Characters/BoxEnemy") as GameObject;
+		GameObject enemy = Instantiate(enemyPrefab, location + localPosition, Quaternion.identity) as GameObject;
+		
+		enemy.transform.SetParent(_.mobs.transform);
 	}
 
 }

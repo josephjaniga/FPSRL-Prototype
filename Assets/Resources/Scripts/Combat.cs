@@ -57,14 +57,14 @@ public class Combat : MonoBehaviour {
 		RaycastHit hit;
 		if ( Physics.Raycast(_.playerBulletSpawn.position, fwd, out hit) ){
 
-			Debug.Log (hit.transform.name);
+			//Debug.Log (hit.transform.name);
 			if ( hit.transform.name != gameObject.transform.name ){
 				hit.transform.gameObject.SendMessage("takeDamage", 1, SendMessageOptions.DontRequireReceiver);
 				MakeBulletTrail(hit);
 			}
 
 		} else {
-			// make a bullet trail in general direction
+			// TODO: make a bullet trail in general direction
 		}
 	}
 
@@ -72,7 +72,7 @@ public class Combat : MonoBehaviour {
 	{
 		GameObject prefabTrail = Resources.Load("Prefabs/BulletTrail") as GameObject;
 		GameObject concreteTrail = Instantiate(prefabTrail, _.playerBulletSpawn.position, Quaternion.identity) as GameObject;
-		concreteTrail.transform.SetParent(GameObject.Find ("Effects").transform);
+		concreteTrail.transform.SetParent(_.effects.transform);
 		concreteTrail.GetComponent<LineRenderer>().SetPosition(0, _.playerBulletSpawn.position);
 		concreteTrail.GetComponent<LineRenderer>().SetPosition(1, hit.point);
 	}

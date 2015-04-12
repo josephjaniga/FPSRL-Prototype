@@ -3,6 +3,8 @@ using System.Collections;
 
 public class Equipment : MonoBehaviour {
 
+	public int cash;
+
 	// Use this for initialization
 	void Start () {
 	

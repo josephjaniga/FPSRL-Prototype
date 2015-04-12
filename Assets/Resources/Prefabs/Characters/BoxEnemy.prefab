@@ -630,7 +630,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cashDropAmount: 25
   willDrop: 0
-  dropChance: 50
+  dropChance: 100
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

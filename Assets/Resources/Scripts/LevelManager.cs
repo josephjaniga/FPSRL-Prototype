@@ -8,7 +8,13 @@ public class LevelManager : MonoBehaviour {
 	public Health playerHealth;
 	public Transform playerStartPosition;
 
+	// the concretes
 	public GameObject ui;
+	public GameObject mobs;
+	public GameObject effects;
+	public GameObject stuff;
+	public GameObject levelGeometry;
+	public GameObject mapper;
 
 	// Use this for initialization
 	void Start () {
@@ -49,6 +55,12 @@ public class LevelManager : MonoBehaviour {
 
 		// set player StartPosition
 		player.transform.position = playerStartPosition.position;
+
+		mobs = _.mobs;
+		stuff = _.stuff;
+		effects = _.effects;
+		levelGeometry = _.levelGeometry;
+		mapper = _.mapper;
 
 
 	}

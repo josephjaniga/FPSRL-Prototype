@@ -40,7 +40,7 @@ public class LootTable : MonoBehaviour {
 				rTorque = new Vector3(Random.Range(-10f, 10f),Random.Range(-10f, 10f),Random.Range(-10f, 10f));
 				// spawn set parent and rename
 				temp = Instantiate(coin, gameObject.transform.position + offset*0.5f, Quaternion.identity) as GameObject;
-				temp.transform.SetParent(GameObject.Find ("Stuff").transform);
+				temp.transform.SetParent(_.stuff.transform);
 				temp.GetComponent<Rigidbody>().AddForce(rDirection);
 				temp.GetComponent<Rigidbody>().AddTorque(rTorque);
 			}

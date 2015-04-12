@@ -1,0 +1,83 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &196548
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 442632}
+  - 114: {fileID: 11454386}
+  - 114: {fileID: 11434124}
+  m_Layer: 0
+  m_Name: Mapper
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &442632
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 196548}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+--- !u!114 &11434124
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 196548}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de52e8e2012234409a0bb8b4dba50466, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &11454386
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 196548}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 07007e614ea77db4c85ed79e07f55149, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  roomPrefab: {fileID: 186196, guid: f09849a3f57564041a6006cc24cbf984, type: 2}
+  modulePrefabsList:
+  - {fileID: 107214, guid: 9d3b1969a97d24e06953c175a5cb852b, type: 2}
+  - {fileID: 107214, guid: 84f0e1aa94a8f4124a48c70e11f607ae, type: 2}
+  - {fileID: 151588, guid: d8cd3fe2eed594162afe93f49d620008, type: 2}
+  - {fileID: 107214, guid: e874454113dbc47ea8b5d4962cffd4ac, type: 2}
+  - {fileID: 186196, guid: f09849a3f57564041a6006cc24cbf984, type: 2}
+  theNexus: {fileID: 0}
+  maxRooms: 1
+  currentRoomSize: 0
+  rejectionsUntilAbandonment: 8
+  rejectionAttempt: 0
+  maxRejections: 256
+  currentRejections: 0
+  openModuleList: []
+  levelGeometry: {fileID: 0}
+  debugRejects: 1
+  alpha: {fileID: 0}
+  omega: {fileID: 0}
+--- !u!1001 &100100000
+Prefab:
+  m_ObjectHideFlags: 1
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications: []
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 0}
+  m_RootGameObject: {fileID: 196548}
+  m_IsPrefabParent: 1
