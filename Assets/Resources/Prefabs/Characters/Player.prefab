@@ -2282,9 +2282,9 @@ MonoBehaviour:
   equippedWeapon: 0
   hasPistol: 1
   hasSword: 0
-  pistolDamageLevel: 2
-  pistolCritLevel: 25
-  pistolCritDamageLevel: 5
+  pistolDamageLevel: 0
+  pistolCritLevel: 0
+  pistolCritDamageLevel: 0
   pistolROFLevel: 0
 --- !u!114 &11455756
 MonoBehaviour:
