@@ -20,11 +20,12 @@ public class Health : MonoBehaviour {
 		
 	}
 
-	public void takeDamage(int DamageAmount){
+	public void takeDamage(Damage DamageObject){
 
 		// something with damage Types later?
+        //Debug.Log(DamageObject.damageValue + " Damage");
 
-		currentHealth -= DamageAmount;
+        currentHealth -= DamageObject.damageValue;
 
 		if ( currentHealth <= 0 ){
 			gameObject.SendMessage("Die", SendMessageOptions.DontRequireReceiver);		
@@ -39,10 +40,8 @@ public class Health : MonoBehaviour {
 
 		// instantiate an explosion
 
-		// handle drops
-
 		//some message?
-		Debug.Log("D-E-D dead bruh");
+		//Debug.Log("D-E-D dead bruh");
 	}
 
 }

@@ -275,9 +275,17 @@ Prefab:
       propertyPath: m_RootOrder
       value: 2
       objectReference: {fileID: 0}
-    - target: {fileID: 116064, guid: ab1d88a85b4bc432c9df799b9adf3f2a, type: 2}
-      propertyPath: m_IsActive
-      value: 1
+    - target: {fileID: 11422362, guid: ab1d88a85b4bc432c9df799b9adf3f2a, type: 2}
+      propertyPath: pistolDamageLevel
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11422362, guid: ab1d88a85b4bc432c9df799b9adf3f2a, type: 2}
+      propertyPath: pistolCritLevel
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11422362, guid: ab1d88a85b4bc432c9df799b9adf3f2a, type: 2}
+      propertyPath: pistolCritDamageLevel
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: ab1d88a85b4bc432c9df799b9adf3f2a, type: 2}

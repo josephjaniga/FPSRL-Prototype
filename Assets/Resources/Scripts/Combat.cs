@@ -59,7 +59,7 @@ public class Combat : MonoBehaviour {
 
 			//Debug.Log (hit.transform.name);
 			if ( hit.transform.name != gameObject.transform.name ){
-				hit.transform.gameObject.SendMessage("takeDamage", 1, SendMessageOptions.DontRequireReceiver);
+				hit.transform.gameObject.SendMessage("takeDamage", _.playerEquipment.calculatedDamage, SendMessageOptions.DontRequireReceiver);
 				MakeBulletTrail(hit);
 			}
 

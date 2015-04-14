@@ -112,7 +112,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &119942
 GameObject:
   m_ObjectHideFlags: 1
@@ -2279,6 +2279,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cash: 0
+  equippedWeapon: 0
+  hasPistol: 1
+  hasSword: 0
+  pistolDamageLevel: 2
+  pistolCritLevel: 25
+  pistolCritDamageLevel: 5
+  pistolROFLevel: 0
 --- !u!114 &11455756
 MonoBehaviour:
   m_ObjectHideFlags: 1

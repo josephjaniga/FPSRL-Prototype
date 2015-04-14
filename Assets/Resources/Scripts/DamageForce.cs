@@ -17,7 +17,7 @@ public class DamageForce : MonoBehaviour
 
     }
 
-	public void takeDamage(int DamageAmount)
+	public void takeDamage(Damage DamageObject)
 	{
 
         Vector3 ForceDirection;
