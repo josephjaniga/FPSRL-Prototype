@@ -75,6 +75,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 417120}
+  - 114: {fileID: 11468112}
   m_Layer: 0
   m_Name: UI
   m_TagString: Untagged
@@ -517,6 +518,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_AllowActivationOnStandalone: 0
+--- !u!114 &11468112
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 133474}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: efbc1c96bb5b21a4d80afe20a96c7ae4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  worldCanvas: {fileID: 0}
 --- !u!114 &11471584
 MonoBehaviour:
   m_ObjectHideFlags: 1

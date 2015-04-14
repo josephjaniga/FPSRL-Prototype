@@ -15,8 +15,10 @@ public static class _
 
 	// the UI
 	private static GameObject	_ui;
-
-	// the helpers
+    private static GameObject   _worldCanvas;
+    private static CombatTextManager _combatTextManager;
+	
+    // the helpers
 	private static Surveyor		_surveyor;
 	private static GameObject	_mobs;
 	private static GameObject	_effects;
@@ -131,6 +133,36 @@ public static class _
 		}
 		set { _ui = value; }
 	}
+
+    public static GameObject worldCanvas
+    {
+        get
+        {
+            GameObject temp = GameObject.Find("WorldSpaceCanvas");
+            if (_worldCanvas == null)
+            {
+                if (temp == null)
+                {
+                    temp = _.ui.transform.FindChild("WorldSpaceCanvas").gameObject;
+                }
+                _worldCanvas = temp;
+            }
+            return _worldCanvas;
+        }
+        set { _worldCanvas = value; }
+    }
+
+    public static CombatTextManager combatTextManager
+    {
+        get
+        {
+            if (_combatTextManager == null)
+            {
+                _combatTextManager = _.ui.GetComponent<CombatTextManager>();
+            }
+            return _combatTextManager;
+        }
+    }
 	
 	public static Surveyor surveyor
 	{
