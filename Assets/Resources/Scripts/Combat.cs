@@ -60,7 +60,7 @@ public class Combat : MonoBehaviour {
 			//Debug.Log (hit.transform.name);
 			if ( hit.transform.name != gameObject.transform.name ){
                 Damage currentAttack = _.playerEquipment.calculatedDamage;
-                _.combatTextManager.CreateChatMessage(hit.point, ""+currentAttack.damageValue, 5f);
+				currentAttack.setPosition(hit.point);
 				hit.transform.gameObject.SendMessage("takeDamage", currentAttack, SendMessageOptions.DontRequireReceiver);
 				MakeBulletTrail(hit);
 			}

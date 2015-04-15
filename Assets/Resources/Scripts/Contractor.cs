@@ -19,7 +19,6 @@ public class Contractor : MonoBehaviour {
     GameObject SpawnMarker;
     GameObject ExitMarker;
 
-
 	// Use this for initialization
 	void Start () {
 

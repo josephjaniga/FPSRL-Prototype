@@ -22,8 +22,7 @@ public class Health : MonoBehaviour {
 
 	public void takeDamage(Damage DamageObject){
 
-		// something with damage Types later?
-        //Debug.Log(DamageObject.damageValue + " Damage");
+		_.combatTextManager.CreateSCT(DamageObject.damagePoint, DamageObject, 2f);
 
         currentHealth -= DamageObject.damageValue;
 

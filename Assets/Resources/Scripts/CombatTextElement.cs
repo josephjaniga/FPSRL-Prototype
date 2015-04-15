@@ -12,7 +12,7 @@ public class CombatTextElement : MonoBehaviour {
     public float lifeTime = 1f;
     private Color colorFG;
     private Color colorBG;
-    private int fontSize = 12;
+    private int fontSize = 48;
 
     void Start()
     {
@@ -48,7 +48,7 @@ public class CombatTextElement : MonoBehaviour {
 
         }
 
-        gameObject.transform.LookAt(_.player.transform);
+		gameObject.GetComponent<RectTransform>().transform.LookAt(_.player.transform);
 
     }
 

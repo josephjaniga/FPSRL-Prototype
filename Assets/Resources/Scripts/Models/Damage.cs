@@ -7,6 +7,7 @@ public class Damage {
     public DamageTypes damageType;
     public Elements damageElement;
     public bool critical;
+	public Vector3 damagePoint = Vector3.zero;
 
     public Damage(int dmg, DamageTypes type = DamageTypes.Ranged, Elements element = Elements.Physical, bool crit = false)
     {
@@ -15,6 +16,11 @@ public class Damage {
         damageElement = element;
         critical = crit;
     }
+
+	public void setPosition(Vector3 dmgPos)
+	{
+		damagePoint = dmgPos;
+	}
 
 }
 
@@ -28,7 +34,7 @@ public enum Elements
 {
     Physical,
     Ethereal,
-    Light,
+    Holy,
     Dark,
     Fire,
     Water,

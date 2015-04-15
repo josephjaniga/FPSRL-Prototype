@@ -112,7 +112,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!1 &119942
 GameObject:
   m_ObjectHideFlags: 1
@@ -1254,15 +1254,15 @@ Camera:
   field of view: 34
   orthographic: 0
   orthographic size: 5
-  m_Depth: 100
+  m_Depth: 2
   m_CullingMask:
     serializedVersion: 2
     m_Bits: 256
   m_RenderingPath: -1
-  m_TargetTexture: {fileID: 0}
+  m_TargetTexture: {fileID: 8400000, guid: d2d8ba3b2be7d464c8ed42b4865b36f6, type: 2}
   m_TargetDisplay: 0
   m_HDR: 0
-  m_OcclusionCulling: 1
+  m_OcclusionCulling: 0
   m_StereoConvergence: 10
   m_StereoSeparation: .0219999999
 --- !u!20 &2011236
@@ -2283,8 +2283,8 @@ MonoBehaviour:
   hasPistol: 1
   hasSword: 0
   pistolDamageLevel: 0
-  pistolCritLevel: 0
-  pistolCritDamageLevel: 0
+  pistolCritLevel: 35
+  pistolCritDamageLevel: 25
   pistolROFLevel: 0
 --- !u!114 &11455756
 MonoBehaviour:

@@ -42,9 +42,6 @@ public class LevelManager : MonoBehaviour {
 
 	public void init()
 	{
-		
-		// create the UI
-		ui = _.ui;
 
 		// get or create start position
 		playerStartPosition = _.playerStartPosition;
@@ -52,6 +49,9 @@ public class LevelManager : MonoBehaviour {
 		// get / set player
 		player = _.player;
 		playerHealth = _.playerHealth;
+
+		// create the UI
+		ui = _.ui;
 
 		// set player StartPosition
 		player.transform.position = playerStartPosition.position;
@@ -61,7 +61,6 @@ public class LevelManager : MonoBehaviour {
 		effects = _.effects;
 		levelGeometry = _.levelGeometry;
 		mapper = _.mapper;
-
 
 	}
 

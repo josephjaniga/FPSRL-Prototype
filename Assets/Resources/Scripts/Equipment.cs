@@ -52,7 +52,7 @@ public class Equipment : MonoBehaviour {
                     calcDmg = _pistolBaseDamage;
                     calcDmg += pistolDamageLevel * STEP_pistolDamage;
                     critDmgBonus = rollCrit(calcCritChance, calcCritDamage);
-                    if ( critDmgBonus > 0 ) { isCrit = true; }
+                    if ( critDmgBonus > 1f ) { isCrit = true; }
                     calcDmg = Mathf.RoundToInt(calcDmg * critDmgBonus);
                     dmgType = _pistolType;
                     dmgElement = _pistolElement;
