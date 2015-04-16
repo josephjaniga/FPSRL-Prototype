@@ -13,9 +13,9 @@ public class Equipment : MonoBehaviour {
 
     // weapon base damage
     private int _pistolBaseDamage = 1;
-    private float _pistolCritChance = 0f;
-    private float _pistolCritDamage = 0f;
-    private int _pistolROF = 1; // shots per second
+    private float _pistolCritChance = .05f;
+    private float _pistolCritDamage = 0.5f;
+    private float _pistolROF = 0.5f; // shots per second
     private Elements _pistolElement = Elements.Physical;
     private DamageTypes _pistolType = DamageTypes.Ranged;
 
@@ -27,9 +27,9 @@ public class Equipment : MonoBehaviour {
 
     // pistol step values
     private static int STEP_pistolDamage = 1;
-    private static float STEP_pistolCritChance = .01f;
-    private static float STEP_pistolCritDamage = .25f;
-    private static int STEP_pistolROF = 1;
+    private static float STEP_pistolCritChance = .05f;
+    private static float STEP_pistolCritDamage = 1.25f;
+    private static float STEP_pistolROF = 2f;
 
     public Damage calculatedDamage
     {
@@ -69,6 +69,27 @@ public class Equipment : MonoBehaviour {
             return damageObject;
         }
     }
+
+	public float calculatedROF
+	{
+		get
+		{
+			float rateOfFire = 1f;
+
+			switch (equippedWeapon)
+			{
+			default:
+				break;
+			case Weapons.Pistol:
+				rateOfFire = 1f / ( _pistolROF + ( pistolROFLevel * STEP_pistolROF ) );
+				break;
+			case Weapons.Sword:
+				break;
+			}
+
+			return rateOfFire;
+		}
+	}
 
     public float rollCrit(float critChance, float critDamage)
     {

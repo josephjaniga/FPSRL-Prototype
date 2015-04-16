@@ -85,7 +85,12 @@ public class Module : MonoBehaviour {
 		Vector3 location = gameObject.transform.position + new Vector3(0f, gameObject.transform.localScale.y+0.25f, 0f);
 		GameObject enemyPrefab = Resources.Load("Prefabs/Characters/BoxEnemy") as GameObject;
 		GameObject enemy = Instantiate(enemyPrefab, location + localPosition, Quaternion.identity) as GameObject;
-		
+
+		Health enemyHealth = enemy.GetComponent<Health>();
+		LootTable enemyLootTable = enemy.GetComponent<LootTable>();
+		enemyHealth.currentHealth = enemyHealth.maximumHealth = Mathf.RoundToInt(enemyHealth.maximumHealth * _.surveyor.maxRooms/10f);
+		enemyLootTable.cashDropAmount *= Mathf.RoundToInt( _.surveyor.maxRooms / 10f );
+
 		enemy.transform.SetParent(_.mobs.transform);
 	}
 

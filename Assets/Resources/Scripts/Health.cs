@@ -34,8 +34,16 @@ public class Health : MonoBehaviour {
 
 	public void Die()
 	{
+
+		if ( gameObject.name == "Player" ){
+			// set player StartPosition
+			_.player.transform.position = _.playerStartPosition.position;
+			//Application.LoadLevel("DeathRecap");
+		} else {
+			Destroy (gameObject);
+		}
+
 		// remove game object
-		Destroy (gameObject);
 
 		// instantiate an explosion
 

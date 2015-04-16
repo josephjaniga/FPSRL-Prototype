@@ -6,7 +6,6 @@ public class LevelManager : MonoBehaviour {
     public int currentLevelNumber = 0;
 	public GameObject player;
 	public Health playerHealth;
-	public Transform playerStartPosition;
 
 	// the concretes
 	public GameObject ui;
@@ -43,9 +42,6 @@ public class LevelManager : MonoBehaviour {
 	public void init()
 	{
 
-		// get or create start position
-		playerStartPosition = _.playerStartPosition;
-
 		// get / set player
 		player = _.player;
 		playerHealth = _.playerHealth;
@@ -54,7 +50,7 @@ public class LevelManager : MonoBehaviour {
 		ui = _.ui;
 
 		// set player StartPosition
-		player.transform.position = playerStartPosition.position;
+		player.transform.position = _.playerStartPosition.position;
 
 		mobs = _.mobs;
 		stuff = _.stuff;

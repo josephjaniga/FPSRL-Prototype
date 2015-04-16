@@ -30,6 +30,10 @@ public class UIManager : MonoBehaviour {
 			WUP_panel_shown = !WUP_panel_shown;
 		}
 
+		if ( Input.GetKeyDown(KeyCode.Escape) ){
+			WUP_panel_shown = false;
+		}
+
 		if ( !WUP_panel_shown ){
 			WeaponUpgradesPanel.SetActive(false);
 			PistolModelCamera.enabled = false;

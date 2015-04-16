@@ -10,6 +10,8 @@ public class Combat : MonoBehaviour {
 	
 	public Animator unitWeaponAnimator;
 	public AudioSource unitWeaponAudioSource;
+
+	public float lastAttackTime = -999f;
 	
 	// Use this for initialization
 	void Start () {
@@ -19,7 +21,7 @@ public class Combat : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-		if ( Input.GetMouseButtonDown(0) ){
+		if ( Input.GetMouseButton(0) && lastAttackTime + _.playerEquipment.calculatedROF <= Time.time  ){
 
 			if ( meleeEquipped ){
 				// melee attack???
@@ -27,8 +29,10 @@ public class Combat : MonoBehaviour {
 
 			if ( rangeEquipped ){
 				if ( !requiresAmmunition ){
+					lastAttackTime = Time.time;
 					gameObject.SendMessage("Shoot", SendMessageOptions.DontRequireReceiver);
 				} else if ( hasAmmunition ){
+					lastAttackTime = Time.time;
 					gameObject.SendMessage("Shoot", SendMessageOptions.DontRequireReceiver);
 				} else {
 					gameObject.SendMessage("DryFire", SendMessageOptions.DontRequireReceiver);
