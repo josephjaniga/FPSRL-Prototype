@@ -88,8 +88,8 @@ public class Module : MonoBehaviour {
 
 		Health enemyHealth = enemy.GetComponent<Health>();
 		LootTable enemyLootTable = enemy.GetComponent<LootTable>();
-		enemyHealth.currentHealth = enemyHealth.maximumHealth = Mathf.RoundToInt(enemyHealth.maximumHealth * _.surveyor.maxRooms/10f);
-		enemyLootTable.cashDropAmount *= Mathf.RoundToInt( _.surveyor.maxRooms / 10f );
+		enemyHealth.currentHealth = enemyHealth.maximumHealth = Mathf.RoundToInt(enemyHealth.maximumHealth * _.surveyor.maxRooms/2f);
+		enemyLootTable.cashDropAmount *= Mathf.RoundToInt( _.surveyor.maxRooms / 3f );
 
 		enemy.transform.SetParent(_.mobs.transform);
 	}

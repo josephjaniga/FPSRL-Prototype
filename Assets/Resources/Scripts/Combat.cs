@@ -21,7 +21,7 @@ public class Combat : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-		if ( Input.GetMouseButton(0) && lastAttackTime + _.playerEquipment.calculatedROF <= Time.time  ){
+		if ( Input.GetMouseButton(0) && lastAttackTime + _.playerAttributes.calculatedROF <= Time.time  ){
 
 			if ( meleeEquipped ){
 				// melee attack???
@@ -63,7 +63,7 @@ public class Combat : MonoBehaviour {
 
 			//Debug.Log (hit.transform.name);
 			if ( hit.transform.name != gameObject.transform.name ){
-                Damage currentAttack = _.playerEquipment.calculatedDamage;
+                Damage currentAttack = _.playerAttributes.calculatedDamage;
 				currentAttack.setPosition(hit.point);
 				hit.transform.gameObject.SendMessage("takeDamage", currentAttack, SendMessageOptions.DontRequireReceiver);
 				MakeBulletTrail(hit);

@@ -12,6 +12,7 @@ public static class _
 	private static Transform	_playerBulletSpawn;
 	private static GameObject	_playerWeapon;
 	private static Transform	_playerStartPosition;
+    private static Attributes   _playerAttributes;
 
 	// the UI
 	private static GameObject	_ui;
@@ -76,6 +77,19 @@ public static class _
 			return _playerEquipment;
 		}
 	}
+    
+    // playerAttributes
+    public static Attributes playerAttributes
+    {
+        get
+        {
+            if (_playerAttributes == null)
+            {
+                _playerAttributes = _.player.GetComponent<Attributes>();
+            }
+            return _playerAttributes;
+        }
+    }
 
 	// playerBulletSpawn
 	public static Transform playerBulletSpawn
@@ -259,8 +273,8 @@ public static class _
 
 
 	// UNNESSECARY???
-	private static GameObject	_gameController;
-	private static LevelManager	_levelManager;
+	//private static GameObject	_gameController;
+	//private static LevelManager	_levelManager;
 
 	//	public static GameObject gameController
 	//	{
