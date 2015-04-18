@@ -31,16 +31,6 @@ public class Equipment : MonoBehaviour {
     public static float    STEP_pistolCritDamage = 1.25f;
     public static float    STEP_pistolROF = 2f;
 
-    public float rollCrit(float critChance, float critDamage)
-    {
-        float damageMultilplier = 1f;
-        if (Random.Range(0f, 1f) <= critChance)
-        {
-            damageMultilplier += critDamage;
-        }
-        return damageMultilplier;
-    }
-
 }
 
 public enum Weapons

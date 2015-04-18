@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+using UnityStandardAssets.Characters.FirstPerson;
+
 public class Attributes : MonoBehaviour {
 
     public int baseDamage = 0;
@@ -14,6 +16,20 @@ public class Attributes : MonoBehaviour {
     // FIXME: relationship between attributes and equipment when calculating stuff?
     // combat calls attributes? -> calls equipment
 
+	public int movementWalkSpeed = 5;
+	public int movementRunSpeed = 10;
+
+	public FirstPersonController fpc;
+
+	void Start()
+	{
+		fpc = _.player.GetComponent<FirstPersonController>();
+	}
+
+	void Update()
+	{
+		fpc.setMovementSpeed(movementWalkSpeed, movementRunSpeed);
+	}
 
     public Damage calculatedDamage
     {
@@ -35,7 +51,7 @@ public class Attributes : MonoBehaviour {
                     float calcCritDamage = baseCriticalDamage + _.playerEquipment._pistolCritDamage + _.playerEquipment.pistolCritDamageLevel * Equipment.STEP_pistolCritDamage;
                     calcDmg = _.playerEquipment._pistolBaseDamage + baseDamage;
                     calcDmg += _.playerEquipment.pistolDamageLevel * Equipment.STEP_pistolDamage;
-                    critDmgBonus = _.playerEquipment.rollCrit(calcCritChance, calcCritDamage);
+                    critDmgBonus = _.playerAttributes.rollCrit(calcCritChance, calcCritDamage);
                     if (critDmgBonus > 1f) { isCrit = true; }
                     calcDmg = Mathf.RoundToInt(calcDmg * critDmgBonus);
                     dmgType = _.playerEquipment._pistolType;
@@ -49,7 +65,6 @@ public class Attributes : MonoBehaviour {
             damageObject = new Damage(calcDmg, dmgType, dmgElement, isCrit);
 
             // TODO: apply weapon effects
-
             return damageObject;
         }
     }
@@ -74,5 +89,15 @@ public class Attributes : MonoBehaviour {
             return rateOfFire;
         }
     }
+	
+	public float rollCrit(float critChance, float critDamage)
+	{
+		float damageMultilplier = 1f;
+		if (Random.Range(0f, 1f) <= critChance)
+		{
+			damageMultilplier += critDamage;
+		}
+		return damageMultilplier;
+	}
 
 }
