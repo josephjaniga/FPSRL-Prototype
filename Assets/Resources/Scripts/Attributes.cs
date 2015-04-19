@@ -18,6 +18,7 @@ public class Attributes : MonoBehaviour {
 
 	public int movementWalkSpeed = 5;
 	public int movementRunSpeed = 10;
+	public int jumpSpeed = 22;
 
 	public FirstPersonController fpc;
 
@@ -28,7 +29,7 @@ public class Attributes : MonoBehaviour {
 
 	void Update()
 	{
-		fpc.setMovementSpeed(movementWalkSpeed, movementRunSpeed);
+		fpc.setSpeeds(movementWalkSpeed, movementRunSpeed, jumpSpeed);
 	}
 
     public Damage calculatedDamage

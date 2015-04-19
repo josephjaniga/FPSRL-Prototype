@@ -254,10 +254,11 @@ namespace UnityStandardAssets.Characters.FirstPerson
             body.AddForceAtPosition(m_CharacterController.velocity*0.1f, hit.point, ForceMode.Impulse);
         }
 
-		public void setMovementSpeed(int walkSpeed, int runSpeed)
+		public void setSpeeds(int walkSpeed, int runSpeed, int jumpSpeed)
 		{
 			m_WalkSpeed = walkSpeed;
 			m_RunSpeed = runSpeed;
+			m_JumpSpeed = jumpSpeed;
 		}
 
     }

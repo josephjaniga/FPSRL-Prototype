@@ -21,6 +21,8 @@ public class UIManager : MonoBehaviour {
 		PistolModelCamera = 	GameObject.Find("PistolModelCamera").GetComponent<Camera>();
 
 		PistolModelCamera.enabled = false;
+
+		Cursor.lockState = CursorLockMode.Confined;
 	}
 	
 	// Update is called once per frame
@@ -35,9 +37,11 @@ public class UIManager : MonoBehaviour {
 		}
 
 		if ( !WUP_panel_shown ){
+			Cursor.visible = false;
 			WeaponUpgradesPanel.SetActive(false);
 			PistolModelCamera.enabled = false;
 		} else {
+			Cursor.visible = true;
 			WeaponUpgradesPanel.SetActive(true);
 			PistolModelCamera.enabled = true;
 		}
