@@ -1,18 +1,20 @@
 fileFormatVersion: 2
-guid: 6e4d88b594ad443bfad72151b34b60cf
-timeCreated: 1428643123
+guid: 7b5f81d659628ec449a46c63a7d088a2
+timeCreated: 1429686673
 licenseType: Free
 ModelImporter:
   serializedVersion: 18
   fileIDToRecycleName:
-    100000: //RootNode
-    400000: //RootNode
-    2300000: //RootNode
-    3300000: //RootNode
-    4300000: Cube
-    4300002: LavaScape_01
-    7400000: Default Take
-    9500000: //RootNode
+    100000: Head
+    100002: //RootNode
+    400000: Head
+    400002: //RootNode
+    2300000: Head
+    2300002: //RootNode
+    3300000: Head
+    3300002: //RootNode
+    4300000: Body
+    4300002: Head
   materials:
     importMaterials: 0
     materialName: 0
@@ -32,7 +34,7 @@ ModelImporter:
     isReadable: 0
   meshes:
     lODScreenPercentages: []
-    globalScale: 30
+    globalScale: .5
     meshCompression: 0
     addColliders: 0
     importBlendShapes: 0
@@ -40,7 +42,7 @@ ModelImporter:
     generateSecondaryUV: 0
     useFileUnits: 1
     optimizeMeshForGPU: 0
-    keepQuads: 0
+    keepQuads: 1
     weldVertices: 1
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
@@ -48,10 +50,10 @@ ModelImporter:
     secondaryUVPackMargin: 4
     useFileScale: 1
   tangentSpace:
-    normalSmoothAngle: 0
+    normalSmoothAngle: 180
     splitTangentsAcrossUV: 0
-    normalImportMode: 1
-    tangentImportMode: 1
+    normalImportMode: 2
+    tangentImportMode: 2
   importAnimation: 1
   copyAvatar: 0
   humanDescription:
@@ -66,7 +68,7 @@ ModelImporter:
     feetSpacing: 0
     rootMotionBoneName: 
   lastHumanDescriptionAvatarSource: {instanceID: 0}
-  animationType: 2
+  animationType: 0
   additionalBone: 0
   userData: 
   assetBundleName: 

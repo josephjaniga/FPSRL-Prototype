@@ -1,26 +1,22 @@
 fileFormatVersion: 2
-guid: 8aea6f5e8ba28429c9cd0a1143c4e661
-timeCreated: 1428646861
+guid: 526f24d7618800144b984b92482fed5a
+timeCreated: 1429686615
 licenseType: Free
 ModelImporter:
   serializedVersion: 18
   fileIDToRecycleName:
-    100000: Lava
+    100000: Head
     100002: //RootNode
-    100004: Rock
-    400000: Lava
+    400000: Head
     400002: //RootNode
-    400004: Rock
-    2300000: Lava
-    2300002: Rock
-    3300000: Lava
-    3300002: Rock
-    4300000: Lava
-    4300002: Rock
-    7400000: Default Take
-    9500000: //RootNode
+    2300000: Head
+    2300002: //RootNode
+    3300000: Head
+    3300002: //RootNode
+    4300000: Body
+    4300002: Head
   materials:
-    importMaterials: 0
+    importMaterials: 1
     materialName: 0
     materialSearch: 1
   animations:
@@ -38,7 +34,7 @@ ModelImporter:
     isReadable: 1
   meshes:
     lODScreenPercentages: []
-    globalScale: 20
+    globalScale: 1
     meshCompression: 0
     addColliders: 0
     importBlendShapes: 1
@@ -54,9 +50,9 @@ ModelImporter:
     secondaryUVPackMargin: 4
     useFileScale: 1
   tangentSpace:
-    normalSmoothAngle: 0
-    splitTangentsAcrossUV: 0
-    normalImportMode: 1
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
     tangentImportMode: 1
   importAnimation: 1
   copyAvatar: 0
@@ -72,7 +68,7 @@ ModelImporter:
     feetSpacing: 0
     rootMotionBoneName: 
   lastHumanDescriptionAvatarSource: {instanceID: 0}
-  animationType: 2
+  animationType: 0
   additionalBone: 0
   userData: 
   assetBundleName: 
