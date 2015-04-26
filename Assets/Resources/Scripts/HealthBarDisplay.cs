@@ -15,7 +15,9 @@ public class HealthBarDisplay : MonoBehaviour {
 
 		unitHealth = gameObject.GetComponent<Health>();
 
-		offset = new Vector3(0f, gameObject.transform.localScale.y, 0f);
+		if ( offset == null ){
+			offset = new Vector3(0f, gameObject.transform.localScale.y, 0f);
+		}
 	
 		if ( healthBar == null ){
 			GameObject temp = Instantiate(Resources.Load ("Prefabs/UI/HealthBarDisplay"), Vector3.zero, Quaternion.identity) as GameObject;

@@ -83,7 +83,7 @@ public class Module : MonoBehaviour {
 			Random.Range(-.5f, .5f) * Geometry.localScale.z
 			);
 		Vector3 location = gameObject.transform.position + new Vector3(0f, gameObject.transform.localScale.y+0.25f, 0f);
-		GameObject enemyPrefab = Resources.Load("Prefabs/Characters/BoxEnemy") as GameObject;
+		GameObject enemyPrefab = Resources.Load("Prefabs/Characters/RiggedRobot") as GameObject;
 		GameObject enemy = Instantiate(enemyPrefab, location + localPosition, Quaternion.identity) as GameObject;
 
 		Health enemyHealth = enemy.GetComponent<Health>();
