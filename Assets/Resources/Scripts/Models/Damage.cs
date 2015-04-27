@@ -8,13 +8,15 @@ public class Damage {
     public Elements damageElement;
     public bool critical;
 	public Vector3 damagePoint = Vector3.zero;
+	public Color damageTextColor = Color.white;
 
-    public Damage(int dmg, DamageTypes type = DamageTypes.Ranged, Elements element = Elements.Physical, bool crit = false)
+	public Damage(int dmg, DamageTypes type = DamageTypes.Ranged, Elements element = Elements.Physical, bool crit = false, Color? dmgTxtColor = null)
     {
         damageValue = dmg;
         damageType = type;
         damageElement = element;
         critical = crit;
+		damageTextColor = dmgTxtColor ?? Color.white;
     }
 
 	public void setPosition(Vector3 dmgPos)

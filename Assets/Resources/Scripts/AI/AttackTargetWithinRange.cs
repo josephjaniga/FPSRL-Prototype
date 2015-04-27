@@ -3,11 +3,11 @@ using System.Collections;
 
 public class AttackTargetWithinRange : MonoBehaviour {
 
-	public float range = 2f;
+	public float range = 3f;
 	Animator anim;
 
-	public float attackSpeed = 2f;
-	public float lastAttack = 0f;
+	public int damageValue = 1;
+	public DamageTypes type = DamageTypes.Melee;
 
 	// Use this for initialization
 	void Start () {
@@ -23,25 +23,32 @@ public class AttackTargetWithinRange : MonoBehaviour {
 
 			float distToTarget = Vector3.Distance(transform.position, target.transform.position);
 			
-			if ( distToTarget <= range && lastAttack + attackSpeed <= Time.time ){
-
-				lastAttack = Time.time;
-
-				// execute one attack animation
+			if ( distToTarget <= range ){
 				anim.SetBool("Attacking", true);
-
-				Damage damageObject = new Damage(1, DamageTypes.Melee);
-
-				// apply one attack worth of damage
-				target.GetComponent<Health>().takeDamage(damageObject);
-
 			} else {
-
 				anim.SetBool("Attacking", false);
-
 			}
 
 		}
 
 	}
+
+	public void AttemptDamage(){
+
+		AudioSource src = gameObject.GetComponent<AudioSource>();
+
+		src.PlayOneShot(src.clip);
+
+		GameObject target = gameObject.GetComponent<Target>().target;
+
+		if ( target != null ){
+			float distToTarget = Vector3.Distance(transform.position, target.transform.position);
+			if ( distToTarget <= range * 1.25f ){
+				Damage damageObject = new Damage(damageValue, type);
+				target.GetComponent<Health>().takeDamage(damageObject);
+			}
+		}
+
+	}
+
 }

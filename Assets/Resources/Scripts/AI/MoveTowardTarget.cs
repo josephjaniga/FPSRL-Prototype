@@ -4,10 +4,15 @@ using System.Collections;
 public class MoveTowardTarget : MonoBehaviour {
 
 	public float speed = 0.1f;
+	public bool crouch = false;
 	Animator anim;
 
 	void Start() {
 		anim = gameObject.GetComponent<Animator>();
+		if ( Random.Range(0f, 1f) > 0.5f ){
+			crouch = false;
+		}
+		anim.SetBool("Crouch", crouch);
 	}
 
 	// Update is called once per frame

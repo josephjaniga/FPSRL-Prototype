@@ -86,10 +86,28 @@ public class Module : MonoBehaviour {
 		GameObject enemyPrefab = Resources.Load("Prefabs/Characters/RiggedRobot") as GameObject;
 		GameObject enemy = Instantiate(enemyPrefab, location + localPosition, Quaternion.identity) as GameObject;
 
+		// set enemy difficulty
 		Health enemyHealth = enemy.GetComponent<Health>();
 		LootTable enemyLootTable = enemy.GetComponent<LootTable>();
+		TargetPlayerWithinRange enemyTargetPlayerWithinRange = enemy.GetComponent<TargetPlayerWithinRange>();
+		MoveTowardTarget enemyMoveTowardTarget = enemy.GetComponent<MoveTowardTarget>();
+		AttackTargetWithinRange enemyAttackTargetWithinRange = enemy.GetComponent<AttackTargetWithinRange>();
+
 		enemyHealth.currentHealth = enemyHealth.maximumHealth = Mathf.RoundToInt(enemyHealth.maximumHealth * _.surveyor.maxRooms/2f);
-		enemyLootTable.cashDropAmount *= Mathf.RoundToInt( _.surveyor.maxRooms / 3f );
+		enemyLootTable.cashDropAmount *= Mathf.RoundToInt( _.surveyor.maxRooms / 1.5f );
+
+		if ( enemyTargetPlayerWithinRange != null ){
+			enemyTargetPlayerWithinRange.range += _.surveyor.maxRooms/3f;
+		}
+
+		if ( enemyMoveTowardTarget != null ){
+			enemyMoveTowardTarget.speed += _.surveyor.maxRooms/30f;
+		}
+
+		if ( enemyAttackTargetWithinRange != null ){
+			enemyAttackTargetWithinRange.range += _.surveyor.maxRooms/15f;
+			enemyAttackTargetWithinRange.damageValue += Mathf.RoundToInt(_.surveyor.maxRooms/10f);
+		}
 
 		enemy.transform.SetParent(_.mobs.transform);
 	}
