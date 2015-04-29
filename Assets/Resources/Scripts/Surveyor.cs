@@ -29,6 +29,8 @@ public class Surveyor : MonoBehaviour {
 
 	public bool debugRejects = true;
 
+    public bool computeAStarNodes = true;
+
 	public Transform alpha = null;
 	public Transform omega = null;
 	
@@ -50,7 +52,6 @@ public class Surveyor : MonoBehaviour {
 		} else {
 			return roomPrefab;
 		}
-
 	}
 
 	public Joint nextOpenJointFromList(){
@@ -114,6 +115,15 @@ public class Surveyor : MonoBehaviour {
 		openModuleList = new List<Module>();
 		alpha = null;
 		omega = null;
+
+        // TODO: wipe the A* Nodes
+        Transform aStar = GameObject.Find("A*").transform;
+
+        foreach (Transform child in aStar)
+        {
+            Destroy(child.gameObject);
+        }
+
 	}
 
 	public void Generate()
@@ -129,7 +139,10 @@ public class Surveyor : MonoBehaviour {
 		omega = concreteOne.transform;
 		theNexus = concreteOne.GetComponent<Module>();
 		concreteOne.transform.SetParent(levelGeometry);
-		openModuleList.Add(theNexus);
+
+        drawAStarNodes(alpha);
+		
+        openModuleList.Add(theNexus);
 		currentRoomSize++;
 		
 		while ( nextOpenJointFromList() != null && currentRoomSize < maxRooms && currentRejections < maxRejections ){
@@ -147,7 +160,7 @@ public class Surveyor : MonoBehaviour {
 				// ignore collision with target
 				if ( moduleGO != j.gameObject.transform.parent.transform ){
 					
-					// check all the children and see if there are any collision
+					// check all the children and see if there are any collisions
 					foreach ( Transform oldChild in moduleGO.transform ){ // FOR EACH COMPONENT
 						Collider oldCol = oldChild.gameObject.GetComponent<Collider>();
 						if ( oldCol != null ){  // IF THAT COMPONENT HAS A COLLIDER
@@ -187,6 +200,9 @@ public class Surveyor : MonoBehaviour {
 						newModule.spawnEnemy();
 					}
 				}
+
+                // draw a* nodes
+                drawAStarNodes(newModule.transform);
 				
 			} else {
 				
@@ -241,5 +257,47 @@ public class Surveyor : MonoBehaviour {
 		omega.gameObject.GetComponent<Module>().addExit();
 
 	}
+
+    public void drawAStarNodes(Transform parent)
+    {
+        foreach (Transform newChild in parent)
+        {
+            Collider newCol = newChild.gameObject.GetComponent<Collider>();
+            if (newCol != null)
+            {
+                float xMin = newCol.bounds.min.x;
+                float xMax = newCol.bounds.max.x;
+                float zMin = newCol.bounds.min.z;
+                float zMax = newCol.bounds.max.z;
+                float top = newCol.bounds.max.y + 1f;
+
+                int zSteps = Mathf.RoundToInt((zMax - zMin) / 0.5f);
+                int xSteps = Mathf.RoundToInt((xMax - xMin) / 0.5f);
+
+                GameObject prefab = Resources.Load("Prefabs/aStarNode") as GameObject;
+
+                for (int x = 0; x < xSteps; x++)
+                {
+                    for (int z = 0; z < zSteps; z++)
+                    {
+                        //TODO: raycast down to the collider
+                        // if score a hit draw an A* Node @
+                        // new Vector3(xMin+x*0.5f, top, zMin+z*0.5f)
+                        Vector3 targetPoint = new Vector3(xMin + x * 0.5f, top, zMin + z * 0.5f);
+                        Vector3 sourcePoint = targetPoint + new Vector3(0f, 5f, 0f);
+
+                        bool hit = Physics.Raycast(sourcePoint, Vector3.down);
+
+                        if (hit)
+                        {
+                            GameObject temp = Instantiate(prefab, sourcePoint, Quaternion.identity) as GameObject;
+                            temp.transform.SetParent(GameObject.Find("A*").transform);
+                            temp.name = targetPoint.ToString();
+                        }
+                    }
+                }
+            }
+        }
+    }
 
 }

@@ -22,8 +22,11 @@ public class Health : MonoBehaviour {
 
 	public void takeDamage(Damage DamageObject){
 
-		_.combatTextManager.CreateSCT(DamageObject.damagePoint, DamageObject, 2f);
-
+        if (DamageObject.source == _.player)
+        {
+            _.combatTextManager.CreateSCT(DamageObject.damagePoint, DamageObject, 2f);
+        }
+		    
         currentHealth -= DamageObject.damageValue;
 
 		if ( currentHealth <= 0 ){

@@ -9,14 +9,16 @@ public class Damage {
     public bool critical;
 	public Vector3 damagePoint = Vector3.zero;
 	public Color damageTextColor = Color.white;
+    public GameObject source;
 
-	public Damage(int dmg, DamageTypes type = DamageTypes.Ranged, Elements element = Elements.Physical, bool crit = false, Color? dmgTxtColor = null)
+	public Damage(int dmg, DamageTypes type = DamageTypes.Ranged, Elements element = Elements.Physical, bool crit = false, Color? dmgTxtColor = null, GameObject dmgSource = null)
     {
         damageValue = dmg;
         damageType = type;
         damageElement = element;
         critical = crit;
 		damageTextColor = dmgTxtColor ?? Color.white;
+        source = dmgSource;
     }
 
 	public void setPosition(Vector3 dmgPos)

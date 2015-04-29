@@ -65,6 +65,7 @@ public class Combat : MonoBehaviour {
 			if ( hit.transform.name != gameObject.transform.name ){
                 Damage currentAttack = _.playerAttributes.calculatedDamage;
 				currentAttack.setPosition(hit.point);
+                currentAttack.source = _.player;
 				hit.transform.gameObject.SendMessage("takeDamage", currentAttack, SendMessageOptions.DontRequireReceiver);
 				MakeBulletTrail(hit);
 			}
