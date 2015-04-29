@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class AStarNode : MonoBehaviour {
+public class AStarNode {
 
     // pathing data
     public AStarNode parent = null;
@@ -19,49 +19,13 @@ public class AStarNode : MonoBehaviour {
     public int HV_cost = 10;    // horizontal or vertical motion cost
     public int D_cost = 14;     // diagonal motion cost
 
-    public float unitSize = 0.5f;   // the grid spacing
+    public float unitSize = 1f;   // the grid spacing
 
     public bool walkable = true;
-    private int _F;         // F-score
-    private int _G = 9999;  // movement cost
-    private int _H = 9999;  // hueristic cost
+    public int F; // F-score
+	public int G; // movement cost
+	public int H; // hueristic cost
 
-    public int F
-    {
-        get
-        {
-            _F = G + H;
-            return _F;
-        }
-    }
-
-    public int G
-    {
-        get
-        {
-            _G = D_cost;
-            return _G;
-        }
-    }
-
-    public int H
-    {
-        get
-        {
-            // TODO: manhattan method
-            _H = ManhattanHueristic();
-            return _H;
-        }
-    }
-
-    public int ManhattanHueristic()
-    {
-        int tempH = 0;
-        // TODO: make sure the position and destination are accurate
-        int xDistance = Mathf.RoundToInt(Mathf.Abs((topDownDestination.x - topDownPosition.x) / unitSize));
-        int yDistance = Mathf.RoundToInt(Mathf.Abs((topDownDestination.y - topDownPosition.y) / unitSize));
-        tempH += (xDistance + yDistance) * HV_cost;
-        return tempH;
-    }
+	public Vector3 pos = new Vector3(0f,0f,0f);
 
 }

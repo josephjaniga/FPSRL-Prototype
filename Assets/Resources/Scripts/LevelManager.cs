@@ -17,13 +17,6 @@ public class LevelManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-
-        if (currentLevelNumber != null) {
-            currentLevelNumber++;
-        } else {
-            currentLevelNumber = 0;
-        }
-
 		init ();
 	}
 	

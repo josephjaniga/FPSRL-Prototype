@@ -1,23 +1,185 @@
 ﻿using UnityEngine;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 
 public class AStarPathfinder : MonoBehaviour {
 
+	public AStarNodeManager asnm;
+
+	public AStarNode concreteNode = new AStarNode();
+
     AStarNode source = null;
     AStarNode destination = null;
+	AStarNode current = null;
 
-    List<AStarNode> all     = new List<AStarNode>();
-    List<AStarNode> open    = new List<AStarNode>();
-    List<AStarNode> closed  = new List<AStarNode>();
+    public List<AStarNode> open    = new List<AStarNode>();
+    public List<AStarNode> closed  = new List<AStarNode>();
 
 	// Use this for initialization
-	void Start () {
-	
+	void Start ()
+	{
+
 	}
 	
 	// Update is called once per frame
-	void Update () {
-	
+	void Update ()
+	{
+		//displayPath();
+		//calculatePathTo(destination);
 	}
+
+	public AStarNode nearestNode(Vector3 pos)
+	{
+		asnm = GameObject.Find ("A*").GetComponent<AStarNodeManager>();
+		AStarNode nearest = null;
+
+		for ( int i=0; i < asnm.all.Count; i++ ){
+			if ( nearest == null ){
+				nearest = asnm.all[i];
+			} else {
+				float distanceToCurrent = Vector3.Distance(pos, asnm.all[i].pos);
+				float distanceToNearest = Vector3.Distance(pos, nearest.pos);
+				if ( distanceToCurrent < distanceToNearest ){
+					nearest = asnm.all[i];
+				}
+			}
+		}
+
+		return nearest;
+	}
+
+	public void AStarInit(){
+		asnm = GameObject.Find ("A*").GetComponent<AStarNodeManager>();
+		source = nearestNode(_.player.transform.position);
+		current = source;
+		destination = asnm.all[Random.Range(0, asnm.all.Count-1)];
+	}
+
+	public List<AStarNode> getAdjacentNodes(AStarNode asn){
+		// eight cardinal directions
+		AStarNode north      = nearestNode(asn.pos + new Vector3( 0f, 0f,  1f) * concreteNode.unitSize);
+		AStarNode northEast  = nearestNode(asn.pos + new Vector3( 1f, 0f,  1f) * concreteNode.unitSize);
+		AStarNode east       = nearestNode(asn.pos + new Vector3( 1f, 0f,  0f) * concreteNode.unitSize);
+		AStarNode southEast  = nearestNode(asn.pos + new Vector3( 1f, 0f, -1f) * concreteNode.unitSize);
+		AStarNode south      = nearestNode(asn.pos + new Vector3( 0f, 0f, -1f) * concreteNode.unitSize);
+		AStarNode southWest  = nearestNode(asn.pos + new Vector3(-1f, 0f, -1f) * concreteNode.unitSize);
+		AStarNode west       = nearestNode(asn.pos + new Vector3(-1f, 0f,  0f) * concreteNode.unitSize);
+		AStarNode northWest  = nearestNode(asn.pos + new Vector3(-1f, 0f,  1f) * concreteNode.unitSize);
+
+		List<AStarNode> temp = new List<AStarNode>();
+		if ( !open.Contains(north) )		{ temp.Add(north); }
+		if ( !open.Contains(northEast) )	{ temp.Add(northEast); }
+		if ( !open.Contains(east) )			{ temp.Add(east); }
+		if ( !open.Contains(southEast) )	{ temp.Add(southEast); }
+		if ( !open.Contains(south) )		{ temp.Add(south); }
+		if ( !open.Contains(southWest) )	{ temp.Add(southWest); }
+		if ( !open.Contains(west) )			{ temp.Add(west); }
+		if ( !open.Contains(northWest) )	{ temp.Add(northWest); }
+		return temp;
+	}
+
+	public void displayPath(){
+
+		if ( GameObject.Find("Debugging") != null ){
+
+			foreach ( Transform child in GameObject.Find("Debugging").transform ){
+				Destroy (child.gameObject);
+			}
+			
+			GameObject prefab = Resources.Load("Prefabs/aStarNode") as GameObject;
+			
+			GameObject src = Instantiate( prefab, source.pos, Quaternion.identity ) as GameObject;
+			src.GetComponent<Renderer>().material.color = Color.green;
+			src.transform.localScale = new Vector3(2f, 0.05f, 2f);
+			src.name = "Source";
+			src.transform.SetParent(GameObject.Find ("Debugging").transform);
+			
+			GameObject dest = Instantiate( prefab, destination.pos, Quaternion.identity ) as GameObject;
+			dest.GetComponent<Renderer>().material.color = Color.red;
+			dest.transform.localScale = new Vector3(2f, 0.05f, 2f);
+			dest.name = "Destination";
+			dest.transform.SetParent(GameObject.Find ("Debugging").transform);
+			
+			// assign values to the opens
+			for ( int i=0; i<open.Count; i++ ){
+				// highlight the open list
+				GameObject tempOpen = Instantiate( prefab, open[i].pos, Quaternion.identity ) as GameObject;
+				tempOpen.GetComponent<Renderer>().material.color = Color.blue;
+				tempOpen.transform.localScale = new Vector3(2f, 0.048f, 2f);
+				tempOpen.name = "Open";
+				tempOpen.transform.SetParent(GameObject.Find ("Debugging").transform);
+			}
+			
+			// assign values to the opens
+			for ( int i=0; i<closed.Count; i++ ){
+				// highlight the closed list
+				GameObject tempClosed = Instantiate( prefab, closed[i].pos, Quaternion.identity ) as GameObject;
+				tempClosed.GetComponent<Renderer>().material.color = Color.cyan;
+				tempClosed.transform.localScale = new Vector3(2f, 0.049f, 2f);
+				tempClosed.name = "Closed";
+				tempClosed.transform.SetParent(GameObject.Find ("Debugging").transform);
+			}
+
+		}
+
+	}
+
+	public void calculatePathTo(AStarNode destination){
+
+		// open the start position
+		open.Add(current);
+		// open the adjacent nodes
+		open.AddRange(getAdjacentNodes(current));
+		// clear duplicates
+		open.Distinct().ToList();
+		closed.Distinct().ToList();
+
+		AStarNode bestChoice = null;
+
+		// assign values to the opens
+		for ( int i=0; i<open.Count; i++ ){
+
+			// movement cost
+			if ( open[i].pos.x == current.pos.x || open[i].pos.z == current.pos.z ){
+				// horizontal or vertical
+				open[i].G = open[i].HV_cost;
+			} else {
+				// diagonal
+				open[i].G = open[i].D_cost;
+			}
+
+			// heuristic cost
+			int xUnitsAway = Mathf.RoundToInt(Mathf.Abs( (open[i].pos.x - destination.pos.x) / open[i].unitSize ));
+			int zUnitsAway = Mathf.RoundToInt(Mathf.Abs( (open[i].pos.z - destination.pos.z) / open[i].unitSize ));
+			open[i].H = xUnitsAway * open[i].HV_cost + zUnitsAway * open[i].HV_cost;
+			open[i].F = open[i].G + open[i].H;
+
+			if ( bestChoice == null ){
+				bestChoice = open[i];
+			} else {
+				if ( bestChoice.F > open[i].F ){
+					bestChoice = open[i];
+				}
+			}
+
+		}
+
+		// make the switch
+		open.Remove(bestChoice);
+		closed.Add(bestChoice);
+		closed.Distinct().ToList();
+		current = bestChoice;
+
+		if ( current != destination && open.Count != 0 ){
+			calculatePathTo(destination);
+		}
+
+	}
+
+	public void clearLists(){
+		open    = new List<AStarNode>();
+		closed  = new List<AStarNode>();
+	}
+
 }

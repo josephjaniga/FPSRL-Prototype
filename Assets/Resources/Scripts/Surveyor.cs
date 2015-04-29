@@ -27,9 +27,9 @@ public class Surveyor : MonoBehaviour {
 
 	public Transform levelGeometry;
 
+	// debugging toggles
 	public bool debugRejects = true;
-
-    public bool computeAStarNodes = true;
+    public bool displayAStarNodes = true;
 
 	public Transform alpha = null;
 	public Transform omega = null;
@@ -123,6 +123,10 @@ public class Surveyor : MonoBehaviour {
         {
             Destroy(child.gameObject);
         }
+
+		AStarNodeManager asnm = GameObject.Find("A*").GetComponent<AStarNodeManager>();
+		asnm.all = new List<AStarNode>();
+
 
 	}
 
@@ -255,24 +259,32 @@ public class Surveyor : MonoBehaviour {
 		
 		// add exit to omega room
 		omega.gameObject.GetComponent<Module>().addExit();
+		
+		_.player.SendMessage("AStarInit", SendMessageOptions.DontRequireReceiver);
 
 	}
 
     public void drawAStarNodes(Transform parent)
     {
+
+		AStarNodeManager asnm = GameObject.Find("A*").GetComponent<AStarNodeManager>();
+
+		AStarNode concreteNode = new AStarNode();
+
         foreach (Transform newChild in parent)
         {
             Collider newCol = newChild.gameObject.GetComponent<Collider>();
             if (newCol != null)
             {
-                float xMin = newCol.bounds.min.x;
-                float xMax = newCol.bounds.max.x;
-                float zMin = newCol.bounds.min.z;
-                float zMax = newCol.bounds.max.z;
-                float top = newCol.bounds.max.y + 1f;
+				// round to the nearest node unit size
+				float xMin = newCol.bounds.min.x - (newCol.bounds.min.x % concreteNode.unitSize);
+				float xMax = newCol.bounds.max.x + 1 - (newCol.bounds.max.x % concreteNode.unitSize);
+				float zMin = newCol.bounds.min.z - (newCol.bounds.min.z % concreteNode.unitSize);
+				float zMax = newCol.bounds.max.z + 1 - (newCol.bounds.max.z % concreteNode.unitSize);
+                float top = newCol.bounds.max.y;
 
-                int zSteps = Mathf.RoundToInt((zMax - zMin) / 0.5f);
-                int xSteps = Mathf.RoundToInt((xMax - xMin) / 0.5f);
+				int zSteps = Mathf.RoundToInt((zMax - zMin) / concreteNode.unitSize);
+				int xSteps = Mathf.RoundToInt((xMax - xMin) / concreteNode.unitSize);
 
                 GameObject prefab = Resources.Load("Prefabs/aStarNode") as GameObject;
 
@@ -280,24 +292,34 @@ public class Surveyor : MonoBehaviour {
                 {
                     for (int z = 0; z < zSteps; z++)
                     {
-                        //TODO: raycast down to the collider
+                        // raycast down to the collider
                         // if score a hit draw an A* Node @
                         // new Vector3(xMin+x*0.5f, top, zMin+z*0.5f)
-                        Vector3 targetPoint = new Vector3(xMin + x * 0.5f, top, zMin + z * 0.5f);
+						Vector3 targetPoint = new Vector3(xMin + x * concreteNode.unitSize, top, zMin + z * concreteNode.unitSize);
                         Vector3 sourcePoint = targetPoint + new Vector3(0f, 5f, 0f);
 
                         bool hit = Physics.Raycast(sourcePoint, Vector3.down);
 
                         if (hit)
                         {
-                            GameObject temp = Instantiate(prefab, sourcePoint, Quaternion.identity) as GameObject;
-                            temp.transform.SetParent(GameObject.Find("A*").transform);
-                            temp.name = targetPoint.ToString();
+							// FIXME: there are a* nodes in places that dont seem logical
+							if ( displayAStarNodes ){
+								// draw the nodes
+								GameObject temp = Instantiate(prefab, targetPoint, Quaternion.identity) as GameObject;
+								temp.transform.SetParent(GameObject.Find("A*").transform);
+								temp.name = targetPoint.ToString();
+							}
+
+							// populate the nodelist
+							AStarNode tempNode = new AStarNode();
+							tempNode.pos = targetPoint;
+							asnm.all.Add(tempNode);
                         }
                     }
                 }
             }
         }
+
     }
 
 }

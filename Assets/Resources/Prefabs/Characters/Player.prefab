@@ -297,6 +297,7 @@ GameObject:
   - 65: {fileID: 6505560}
   - 114: {fileID: 11403696}
   - 114: {fileID: 11427728}
+  - 114: {fileID: 11491982}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -2284,6 +2285,12 @@ MonoBehaviour:
   equippedWeapon: 0
   hasPistol: 1
   hasSword: 0
+  _pistolBaseDamage: 1
+  _pistolCritChance: .0500000007
+  _pistolCritDamage: 0
+  _pistolROF: .5
+  _pistolElement: 0
+  _pistolType: 0
   pistolDamageLevel: 0
   pistolCritLevel: 0
   pistolCritDamageLevel: 0
@@ -2299,6 +2306,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 88b8fbf97c1386242b7489ffbc34754f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  baseDamage: 0
+  baseCriticalChance: 0
+  baseCriticalDamage: .5
+  baseROF: 1
+  movementWalkSpeed: 5
+  movementRunSpeed: 10
+  jumpSpeed: 12
+  fpc: {fileID: 0}
 --- !u!114 &11455756
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2406,6 +2421,18 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 8bc94ec6ed537e743b481638bdcd503d, type: 3}
   m_JumpSound: {fileID: 8300000, guid: 5897aeed9b676024fbb8c694b421a861, type: 3}
   m_LandSound: {fileID: 8300000, guid: 3b09d59f4499d45428baa7a21e954296, type: 3}
+--- !u!114 &11491982
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 144880}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 423a0763318370949bf82662f48d108b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  asnm: {fileID: 0}
 --- !u!135 &13519416
 SphereCollider:
   m_ObjectHideFlags: 1
