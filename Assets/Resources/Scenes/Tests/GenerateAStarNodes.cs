@@ -45,7 +45,7 @@ public class GenerateAStarNodes : MonoBehaviour {
 					
 					bool hit = Physics.Raycast(sourcePoint, Vector3.down);
 					
-					if (hit)
+					if (hit && GameObject.Find(targetPoint.ToString()) == null )
 					{
 						// FIXME: there are a* nodes in places that dont seem logical
 						if ( displayAStarNodes ){

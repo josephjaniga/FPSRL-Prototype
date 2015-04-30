@@ -121,8 +121,7 @@ public class AStarPathfinder : MonoBehaviour {
 			dest.name = "Destination";
 			dest.transform.SetParent(GameObject.Find ("Debugging").transform);
 			
-			// assign values to the opens
-			
+			// debug open
             for ( int i=0; i<open.Count; i++ ){
 				// highlight the open list
 				GameObject tempOpen = Instantiate( prefab, open[i].pos, Quaternion.identity ) as GameObject;
@@ -132,8 +131,7 @@ public class AStarPathfinder : MonoBehaviour {
 				tempOpen.transform.SetParent(GameObject.Find ("Debugging").transform);
 			}
             
-			
-			// assign values to the opens
+			// debug closed
 			for ( int i=0; i<closed.Count; i++ ){
 				// highlight the closed list
 				GameObject tempClosed = Instantiate( prefab, closed[i].pos, Quaternion.identity ) as GameObject;
@@ -148,6 +146,9 @@ public class AStarPathfinder : MonoBehaviour {
     }
 
 	public void calculatePathTo(AStarNode destination){
+
+        // clear the open list
+        open = new List<AStarNode>();
 
 		// open the start position
 		open.Add(current);
@@ -202,9 +203,11 @@ public class AStarPathfinder : MonoBehaviour {
 		closed.Distinct().ToList();
 		current = bestChoice;
 
-		if ( closed.Count > 1 ){
+        /*
+		if ( closed.Count > 1){
 			closed[closed.Count-1].parent = closed[closed.Count-2];
 		}
+        */
 
 		if ( current != destination && open.Count != 0 ){
 			calculatePathTo(destination);
