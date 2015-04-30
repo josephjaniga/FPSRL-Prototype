@@ -25,8 +25,22 @@ public class AStarPathfinder : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
 	{
-		//displayPath();
-		//calculatePathTo(destination);
+        /*
+        Vector3 fwd = _.playerBulletSpawn.TransformDirection(Vector3.forward);
+		RaycastHit hit;
+        if (Physics.Raycast(_.playerBulletSpawn.position, fwd, out hit))
+        {
+            destination = nearestNode(hit.point);
+            clearLists();
+        }
+        */
+
+        if (destination != null)
+        {
+            calculatePathTo(destination);
+            displayPath();
+        }
+		
 	}
 
 	public AStarNode nearestNode(Vector3 pos)
@@ -83,47 +97,50 @@ public class AStarPathfinder : MonoBehaviour {
 
 		if ( GameObject.Find("Debugging") != null ){
 
-			foreach ( Transform child in GameObject.Find("Debugging").transform ){
-				Destroy (child.gameObject);
-			}
-			
+            foreach (Transform child in GameObject.Find("Debugging").transform)
+            {
+                Destroy(child.gameObject);
+            }
+
 			GameObject prefab = Resources.Load("Prefabs/aStarNode") as GameObject;
 			
 			GameObject src = Instantiate( prefab, source.pos, Quaternion.identity ) as GameObject;
 			src.GetComponent<Renderer>().material.color = Color.green;
-			src.transform.localScale = new Vector3(2f, 0.05f, 2f);
+			src.transform.localScale = new Vector3(1f, 0.05f, 1f);
 			src.name = "Source";
 			src.transform.SetParent(GameObject.Find ("Debugging").transform);
 			
 			GameObject dest = Instantiate( prefab, destination.pos, Quaternion.identity ) as GameObject;
 			dest.GetComponent<Renderer>().material.color = Color.red;
-			dest.transform.localScale = new Vector3(2f, 0.05f, 2f);
+			dest.transform.localScale = new Vector3(1f, 0.05f, 1f);
 			dest.name = "Destination";
 			dest.transform.SetParent(GameObject.Find ("Debugging").transform);
 			
 			// assign values to the opens
-			for ( int i=0; i<open.Count; i++ ){
+			
+            for ( int i=0; i<open.Count; i++ ){
 				// highlight the open list
 				GameObject tempOpen = Instantiate( prefab, open[i].pos, Quaternion.identity ) as GameObject;
 				tempOpen.GetComponent<Renderer>().material.color = Color.blue;
-				tempOpen.transform.localScale = new Vector3(2f, 0.048f, 2f);
+				tempOpen.transform.localScale = new Vector3(1f, 0.040f, 1f);
 				tempOpen.name = "Open";
 				tempOpen.transform.SetParent(GameObject.Find ("Debugging").transform);
 			}
+            
 			
 			// assign values to the opens
 			for ( int i=0; i<closed.Count; i++ ){
 				// highlight the closed list
 				GameObject tempClosed = Instantiate( prefab, closed[i].pos, Quaternion.identity ) as GameObject;
 				tempClosed.GetComponent<Renderer>().material.color = Color.cyan;
-				tempClosed.transform.localScale = new Vector3(2f, 0.049f, 2f);
+				tempClosed.transform.localScale = new Vector3(1f, 0.045f, 1f);
 				tempClosed.name = "Closed";
 				tempClosed.transform.SetParent(GameObject.Find ("Debugging").transform);
 			}
 
-		}
+        }
 
-	}
+    }
 
 	public void calculatePathTo(AStarNode destination){
 

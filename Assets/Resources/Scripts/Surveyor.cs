@@ -127,7 +127,6 @@ public class Surveyor : MonoBehaviour {
 		AStarNodeManager asnm = GameObject.Find("A*").GetComponent<AStarNodeManager>();
 		asnm.all = new List<AStarNode>();
 
-
 	}
 
 	public void Generate()
