@@ -9,9 +9,9 @@ public class AStarPathfinder : MonoBehaviour {
 
 	public AStarNode concreteNode = new AStarNode();
 
-    AStarNode source = null;
-    AStarNode destination = null;
-	AStarNode current = null;
+    public AStarNode source = null;
+    public AStarNode destination = null;
+	public AStarNode current = null;
 
     public List<AStarNode> open    = new List<AStarNode>();
     public List<AStarNode> closed  = new List<AStarNode>();
@@ -37,8 +37,13 @@ public class AStarPathfinder : MonoBehaviour {
 
         if (destination != null)
         {
+			clearLists();
             calculatePathTo(destination);
-            displayPath();
+            //displayPath();
+
+			allNodesGray();
+			colorizeClosedPath();
+			destination = null;
         }
 		
 	}
@@ -152,6 +157,15 @@ public class AStarPathfinder : MonoBehaviour {
 		open.Distinct().ToList();
 		closed.Distinct().ToList();
 
+		// remove all matching items in the open list from the closed list
+
+		for ( int i=0; i<open.Count; i++ ){
+			if ( closed.Contains(open[i]) ){
+				open.RemoveAt(i);
+				i--;
+			}
+		}
+
 		AStarNode bestChoice = null;
 
 		// assign values to the opens
@@ -188,6 +202,10 @@ public class AStarPathfinder : MonoBehaviour {
 		closed.Distinct().ToList();
 		current = bestChoice;
 
+		if ( closed.Count > 1 ){
+			closed[closed.Count-1].parent = closed[closed.Count-2];
+		}
+
 		if ( current != destination && open.Count != 0 ){
 			calculatePathTo(destination);
 		}
@@ -197,6 +215,22 @@ public class AStarPathfinder : MonoBehaviour {
 	public void clearLists(){
 		open    = new List<AStarNode>();
 		closed  = new List<AStarNode>();
+	}
+
+	public void allNodesGray (){
+		// make all the nodes color white
+		foreach ( Transform child in GameObject.Find ("A*").transform ){
+			child.gameObject.GetComponent<Renderer>().material.color = Color.gray;
+			child.localScale = new Vector3(.1f, .1f, .1f);
+		}
+	}
+
+	public void colorizeClosedPath(){
+		foreach (AStarNode n in closed){
+			GameObject t = GameObject.Find (n.pos.ToString());
+			t.GetComponent<Renderer>().material.color = Color.green;
+			t.transform.localScale = new Vector3(.25f, .25f, .25f);
+		}
 	}
 
 }

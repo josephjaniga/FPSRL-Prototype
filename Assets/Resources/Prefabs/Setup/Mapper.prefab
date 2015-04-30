@@ -68,7 +68,7 @@ MonoBehaviour:
   openModuleList: []
   levelGeometry: {fileID: 0}
   debugRejects: 0
-  displayAStarNodes: 0
+  displayAStarNodes: 1
   alpha: {fileID: 0}
   omega: {fileID: 0}
 --- !u!1001 &100100000
