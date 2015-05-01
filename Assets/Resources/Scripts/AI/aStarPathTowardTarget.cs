@@ -19,7 +19,7 @@ public class aStarPathTowardTarget : MonoBehaviour {
 
 	public void targetUpdated(){
 
-		Debug.Log ("event received");
+		//Debug.Log ("event received");
 		asp.destination = asp.nearestNode(t.target.transform.position);
 		asp.source = asp.nearestNode(gameObject.transform.position);
 		asp.current = asp.source;

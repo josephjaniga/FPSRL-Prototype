@@ -98,6 +98,30 @@ public class AStarPathfinder : MonoBehaviour {
 		return temp;
 	}
 
+    public List<AStarNode> getAdjacentNodesByName(AStarNode asn)
+    {
+        // eight cardinal directions
+        AStarNode north = asnm.getNodeByName((asn.pos + new Vector3(0f, 0f, 1f) * concreteNode.unitSize).ToString());
+        AStarNode northEast = asnm.getNodeByName((asn.pos + new Vector3(1f, 0f, 1f) * concreteNode.unitSize).ToString());
+        AStarNode east = asnm.getNodeByName((asn.pos + new Vector3(1f, 0f, 0f) * concreteNode.unitSize).ToString());
+        AStarNode southEast = asnm.getNodeByName((asn.pos + new Vector3(1f, 0f, -1f) * concreteNode.unitSize).ToString());
+        AStarNode south = asnm.getNodeByName((asn.pos + new Vector3(0f, 0f, -1f) * concreteNode.unitSize).ToString());
+        AStarNode southWest = asnm.getNodeByName((asn.pos + new Vector3(-1f, 0f, -1f) * concreteNode.unitSize).ToString());
+        AStarNode west = asnm.getNodeByName((asn.pos + new Vector3(-1f, 0f, 0f) * concreteNode.unitSize).ToString());
+        AStarNode northWest = asnm.getNodeByName((asn.pos + new Vector3(-1f, 0f, 1f) * concreteNode.unitSize).ToString());
+
+        List<AStarNode> temp = new List<AStarNode>();
+        if (!open.Contains(north) && north != null ) { temp.Add(north); }
+        if (!open.Contains(northEast) && northEast != null) { temp.Add(northEast); }
+        if (!open.Contains(east) && east != null) { temp.Add(east); }
+        if (!open.Contains(southEast) && southEast != null) { temp.Add(southEast); }
+        if (!open.Contains(south) && south != null) { temp.Add(south); }
+        if (!open.Contains(southWest) && southWest != null) { temp.Add(southWest); }
+        if (!open.Contains(west) && west != null) { temp.Add(west); }
+        if (!open.Contains(northWest) && northWest != null) { temp.Add(northWest); }
+        return temp;
+    }
+
 	public void displayPath(){
 
 		if ( GameObject.Find("Debugging") != null ){
@@ -153,13 +177,12 @@ public class AStarPathfinder : MonoBehaviour {
 		// open the start position
 		open.Add(current);
 		// open the adjacent nodes
-		open.AddRange(getAdjacentNodes(current));
+        open.AddRange(getAdjacentNodesByName(current));
 		// clear duplicates
 		open.Distinct().ToList();
 		closed.Distinct().ToList();
 
 		// remove all matching items in the open list from the closed list
-
 		for ( int i=0; i<open.Count; i++ ){
 			if ( closed.Contains(open[i]) ){
 				open.RemoveAt(i);
@@ -171,6 +194,9 @@ public class AStarPathfinder : MonoBehaviour {
 
 		// assign values to the opens
 		for ( int i=0; i<open.Count; i++ ){
+
+            //Debug.Log(open.Count);
+            //Debug.Log("Current: " + current);
 
 			// movement cost
 			if ( open[i].pos.x == current.pos.x || open[i].pos.z == current.pos.z ){

@@ -59,8 +59,8 @@ MonoBehaviour:
   - {fileID: 107214, guid: e874454113dbc47ea8b5d4962cffd4ac, type: 2}
   - {fileID: 186196, guid: f09849a3f57564041a6006cc24cbf984, type: 2}
   theNexus: {fileID: 0}
-  maxRooms: 1
-  currentRoomSize: 1
+  maxRooms: 64
+  currentRoomSize: 64
   rejectionsUntilAbandonment: 8
   rejectionAttempt: 0
   maxRejections: 256
