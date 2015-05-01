@@ -38,6 +38,12 @@ public class AStarPathfinder : MonoBehaviour {
         if (destination != null)
         {
 			clearLists();
+
+			// clear the open list
+			open = new List<AStarNode>();
+			// open the start position
+			open.Add(current);
+
             calculatePathTo(destination);
             //displayPath();
 
@@ -101,24 +107,24 @@ public class AStarPathfinder : MonoBehaviour {
     public List<AStarNode> getAdjacentNodesByName(AStarNode asn)
     {
         // eight cardinal directions
-        AStarNode north = asnm.getNodeByName((asn.pos + new Vector3(0f, 0f, 1f) * concreteNode.unitSize).ToString());
-        AStarNode northEast = asnm.getNodeByName((asn.pos + new Vector3(1f, 0f, 1f) * concreteNode.unitSize).ToString());
-        AStarNode east = asnm.getNodeByName((asn.pos + new Vector3(1f, 0f, 0f) * concreteNode.unitSize).ToString());
-        AStarNode southEast = asnm.getNodeByName((asn.pos + new Vector3(1f, 0f, -1f) * concreteNode.unitSize).ToString());
-        AStarNode south = asnm.getNodeByName((asn.pos + new Vector3(0f, 0f, -1f) * concreteNode.unitSize).ToString());
-        AStarNode southWest = asnm.getNodeByName((asn.pos + new Vector3(-1f, 0f, -1f) * concreteNode.unitSize).ToString());
-        AStarNode west = asnm.getNodeByName((asn.pos + new Vector3(-1f, 0f, 0f) * concreteNode.unitSize).ToString());
-        AStarNode northWest = asnm.getNodeByName((asn.pos + new Vector3(-1f, 0f, 1f) * concreteNode.unitSize).ToString());
+        AStarNode north = 		asnm.getNodeByName((asn.pos + new Vector3( 0f, 0f,  1f) * concreteNode.unitSize).ToString());
+        AStarNode northEast = 	asnm.getNodeByName((asn.pos + new Vector3( 1f, 0f,  1f) * concreteNode.unitSize).ToString());
+        AStarNode east = 		asnm.getNodeByName((asn.pos + new Vector3( 1f, 0f,  0f) * concreteNode.unitSize).ToString());
+        AStarNode southEast = 	asnm.getNodeByName((asn.pos + new Vector3( 1f, 0f, -1f) * concreteNode.unitSize).ToString());
+        AStarNode south = 		asnm.getNodeByName((asn.pos + new Vector3( 0f, 0f, -1f) * concreteNode.unitSize).ToString());
+        AStarNode southWest = 	asnm.getNodeByName((asn.pos + new Vector3(-1f, 0f, -1f) * concreteNode.unitSize).ToString());
+        AStarNode west = 		asnm.getNodeByName((asn.pos + new Vector3(-1f, 0f,  0f) * concreteNode.unitSize).ToString());
+        AStarNode northWest = 	asnm.getNodeByName((asn.pos + new Vector3(-1f, 0f,  1f) * concreteNode.unitSize).ToString());
 
         List<AStarNode> temp = new List<AStarNode>();
-        if (!open.Contains(north) && north != null ) { temp.Add(north); }
-        if (!open.Contains(northEast) && northEast != null) { temp.Add(northEast); }
-        if (!open.Contains(east) && east != null) { temp.Add(east); }
-        if (!open.Contains(southEast) && southEast != null) { temp.Add(southEast); }
-        if (!open.Contains(south) && south != null) { temp.Add(south); }
-        if (!open.Contains(southWest) && southWest != null) { temp.Add(southWest); }
-        if (!open.Contains(west) && west != null) { temp.Add(west); }
-        if (!open.Contains(northWest) && northWest != null) { temp.Add(northWest); }
+		if ( north != null ){ temp.Add (north); }
+		if ( northEast != null ){ temp.Add (northEast); }
+		if ( east != null ){ temp.Add (east); }
+		if ( southEast != null ){ temp.Add (southEast); }
+		if ( south != null ){ temp.Add (south); }
+		if ( southWest != null ){ temp.Add (southWest); }
+		if ( west != null ){ temp.Add (west); }
+		if ( northWest != null ){ temp.Add (northWest); }
         return temp;
     }
 
@@ -171,13 +177,14 @@ public class AStarPathfinder : MonoBehaviour {
 
 	public void calculatePathTo(AStarNode destination){
 
-        // clear the open list
-        open = new List<AStarNode>();
+//      // clear the open list
+//      open = new List<AStarNode>();
+//		// open the start position
+//		open.Add(current);
 
-		// open the start position
-		open.Add(current);
-		// open the adjacent nodes
-        open.AddRange(getAdjacentNodesByName(current));
+//		// open the adjacent nodes
+//		open.AddRange(getAdjacentNodesByName(current));
+		
 		// clear duplicates
 		open.Distinct().ToList();
 		closed.Distinct().ToList();
@@ -194,33 +201,15 @@ public class AStarPathfinder : MonoBehaviour {
 
 		// assign values to the opens
 		for ( int i=0; i<open.Count; i++ ){
-
-            //Debug.Log(open.Count);
-            //Debug.Log("Current: " + current);
-
-			// movement cost
-			if ( open[i].pos.x == current.pos.x || open[i].pos.z == current.pos.z ){
-				// horizontal or vertical
-				open[i].G = open[i].HV_cost;
-			} else {
-				// diagonal
-				open[i].G = open[i].D_cost;
-			}
-
-			// heuristic cost
-			int xUnitsAway = Mathf.RoundToInt(Mathf.Abs( (open[i].pos.x - destination.pos.x) / open[i].unitSize ));
-			int zUnitsAway = Mathf.RoundToInt(Mathf.Abs( (open[i].pos.z - destination.pos.z) / open[i].unitSize ));
-			open[i].H = xUnitsAway * open[i].HV_cost + zUnitsAway * open[i].HV_cost;
-			open[i].F = open[i].G + open[i].H;
-
+			AStarNode temp = open[i];
+			calculateCosts(current, ref temp, destination);
 			if ( bestChoice == null ){
-				bestChoice = open[i];
+				bestChoice = temp;
 			} else {
-				if ( bestChoice.F > open[i].F ){
-					bestChoice = open[i];
+				if ( bestChoice.F > temp.F ){
+					bestChoice = temp;
 				}
 			}
-
 		}
 
 		// make the switch
@@ -228,12 +217,30 @@ public class AStarPathfinder : MonoBehaviour {
 		closed.Add(bestChoice);
 		closed.Distinct().ToList();
 		current = bestChoice;
+		
+		foreach ( AStarNode n in getAdjacentNodesByName(current) ){
 
-        /*
-		if ( closed.Count > 1){
-			closed[closed.Count-1].parent = closed[closed.Count-2];
+			if ( n == destination ){
+				destination.parent = n;
+				break;
+			}
+
+			// walkable and not on the closed list
+			if ( n.walkable && !closed.Contains(n) ){
+				AStarNode temp = n;
+				if (!open.Contains(temp)) {// on open list?
+					open.Add(temp);
+					temp.parent = current;
+					calculateCosts(current, ref temp, destination);
+				} else if (temp.G < current.G) {
+					temp.parent = current;
+					calculateCosts(current, ref temp, destination);
+				}
+			}
 		}
-        */
+
+		// open the adjacent nodes
+		//open.AddRange(getAdjacentNodesByName(current));
 
 		if ( current != destination && open.Count != 0 ){
 			calculatePathTo(destination);
@@ -262,4 +269,42 @@ public class AStarPathfinder : MonoBehaviour {
 		}
 	}
 
+	public void calculateCosts(AStarNode current, ref AStarNode testNode, AStarNode destination){
+
+//		// movement cost
+//		if ( testNode.pos.x == current.pos.x || testNode.pos.z == current.pos.z ){
+//			// horizontal or vertical
+//			testNode.G = testNode.HV_cost;
+//		} else {
+//			// diagonal
+//			testNode.G = testNode.D_cost;
+//		}
+
+		// FIXME: redo G cost - MovementCost
+		testNode.G = calculateMovementCost(testNode);
+
+		// heuristic cost
+		int xUnitsAway = Mathf.RoundToInt(Mathf.Abs( (testNode.pos.x - destination.pos.x) / testNode.unitSize ));
+		int zUnitsAway = Mathf.RoundToInt(Mathf.Abs( (testNode.pos.z - destination.pos.z) / testNode.unitSize ));
+		testNode.H = xUnitsAway * testNode.HV_cost + zUnitsAway * testNode.HV_cost;
+		testNode.F = testNode.G + testNode.H;
+
+	}
+
+	public int calculateMovementCost(AStarNode n){
+		if ( n == source || n.parent == null ){
+			return 0;
+		} else {
+			// movement cost
+			if ( n.pos.x == n.parent.pos.x || n.pos.z == n.parent.pos.z ){
+				// horizontal or vertical
+				return n.HV_cost + calculateMovementCost(n.parent);
+			} else {
+				// diagonal
+				return n.D_cost + calculateMovementCost(n.parent);
+			}
+		}
+	}
+	
+	
 }
