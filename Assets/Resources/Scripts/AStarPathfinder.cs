@@ -201,6 +201,10 @@ public class AStarPathfinder : MonoBehaviour {
 
 		// assign values to the opens
 		for ( int i=0; i<open.Count; i++ ){
+			if ( open[i] == destination ){
+				bestChoice = open[i];
+				break;
+			}
 			AStarNode temp = open[i];
 			calculateCosts(current, ref temp, destination);
 			if ( bestChoice == null ){
@@ -217,14 +221,9 @@ public class AStarPathfinder : MonoBehaviour {
 		closed.Add(bestChoice);
 		closed.Distinct().ToList();
 		current = bestChoice;
-		
+
+		// open the adjacent nodes
 		foreach ( AStarNode n in getAdjacentNodesByName(current) ){
-
-			if ( n == destination ){
-				destination.parent = n;
-				break;
-			}
-
 			// walkable and not on the closed list
 			if ( n.walkable && !closed.Contains(n) ){
 				AStarNode temp = n;
@@ -238,9 +237,6 @@ public class AStarPathfinder : MonoBehaviour {
 				}
 			}
 		}
-
-		// open the adjacent nodes
-		//open.AddRange(getAdjacentNodesByName(current));
 
 		if ( current != destination && open.Count != 0 ){
 			calculatePathTo(destination);
@@ -262,11 +258,22 @@ public class AStarPathfinder : MonoBehaviour {
 	}
 
 	public void colorizeClosedPath(){
-		foreach (AStarNode n in closed){
+
+//		foreach (AStarNode n in closed){
+//			GameObject t = GameObject.Find (n.pos.ToString());
+//			t.GetComponent<Renderer>().material.color = Color.green;
+//			t.transform.localScale = new Vector3(.25f, .25f, .25f);
+//		}
+
+		AStarNode n = destination;
+		while ( n != null  && n.parent != null ){
 			GameObject t = GameObject.Find (n.pos.ToString());
 			t.GetComponent<Renderer>().material.color = Color.green;
 			t.transform.localScale = new Vector3(.25f, .25f, .25f);
+			n = n.parent;
 		}
+
+
 	}
 
 	public void calculateCosts(AStarNode current, ref AStarNode testNode, AStarNode destination){
