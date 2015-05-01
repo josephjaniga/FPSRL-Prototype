@@ -6,6 +6,8 @@ public class AStarNodeManager : MonoBehaviour {
 
 	public List<AStarNode> all = new List<AStarNode>();
 
+	public int pending = 0;
+
     public AStarNode getNodeByName(string n)
     {
         AStarNode temp = null;

@@ -19,7 +19,7 @@ public class AStarNode {
     public int HV_cost = 10;    // horizontal or vertical motion cost
     public int D_cost = 14;     // diagonal motion cost
 
-    public float unitSize = 1.5f;   // the grid spacing
+    public float unitSize = 2f;   // the grid spacing
 
     public bool walkable = true;
     public int F; // F-score

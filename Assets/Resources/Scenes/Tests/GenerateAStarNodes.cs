@@ -3,8 +3,12 @@ using System.Collections;
 
 public class GenerateAStarNodes : MonoBehaviour {
 
+	public AStarNodeManager asnm;
+
 	// Use this for initialization
 	void Start () {
+		asnm = GameObject.Find("A*").GetComponent<AStarNodeManager>();
+		asnm.pending++;
 		generateNodes();
 	}
 
@@ -32,7 +36,8 @@ public class GenerateAStarNodes : MonoBehaviour {
 			int xSteps = Mathf.RoundToInt((xMax - xMin) / concreteNode.unitSize);
 			
 			GameObject prefab = Resources.Load("Prefabs/aStarNode") as GameObject;
-			
+
+			// place the nodes
 			for (int x = 0; x < xSteps; x++)
 			{
 				for (int z = 0; z < zSteps; z++)
@@ -59,12 +64,31 @@ public class GenerateAStarNodes : MonoBehaviour {
 						AStarNode tempNode = new AStarNode();
 						tempNode.pos = targetPoint;
 						tempNode.nodeName = targetPoint.ToString();
+
 						asnm.all.Add(tempNode);
 					}
 				}
 			}
+
+			asnm.pending--;
+
+			if ( asnm.pending <= 0 ){
+				foreach ( AStarNode tempNode in asnm.all ){
+					
+					tempNode.north = 		asnm.getNodeByName((tempNode.pos + new Vector3( 0f, 0f,  1f) * concreteNode.unitSize).ToString());
+					tempNode.northEast = 	asnm.getNodeByName((tempNode.pos + new Vector3( 1f, 0f,  1f) * concreteNode.unitSize).ToString());
+					tempNode.east = 		asnm.getNodeByName((tempNode.pos + new Vector3( 1f, 0f,  0f) * concreteNode.unitSize).ToString());
+					tempNode.southEast = 	asnm.getNodeByName((tempNode.pos + new Vector3( 1f, 0f, -1f) * concreteNode.unitSize).ToString());
+					tempNode.south = 		asnm.getNodeByName((tempNode.pos + new Vector3( 0f, 0f, -1f) * concreteNode.unitSize).ToString());
+					tempNode.southWest = 	asnm.getNodeByName((tempNode.pos + new Vector3(-1f, 0f, -1f) * concreteNode.unitSize).ToString());
+					tempNode.west = 		asnm.getNodeByName((tempNode.pos + new Vector3(-1f, 0f,  0f) * concreteNode.unitSize).ToString());
+					tempNode.northWest = 	asnm.getNodeByName((tempNode.pos + new Vector3(-1f, 0f,  1f) * concreteNode.unitSize).ToString());
+
+				}
+			}
+			
 		}
-
+		
 	}
-
+	
 }

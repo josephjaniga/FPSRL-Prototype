@@ -20,9 +20,9 @@ public class TargetPlayerWithinRange : MonoBehaviour {
 
 		if ( distToTarget <= range ){
 
-			Vector3 point = player.transform.position;
-			point.y = 0f;
-			transform.LookAt(point);
+			//Vector3 point = player.transform.position;
+			//point.y = 0f;
+			//transform.LookAt(point);
 			gameObject.GetComponent<Target>().target = player;
 
 		} else {

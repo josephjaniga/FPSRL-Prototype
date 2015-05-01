@@ -16,6 +16,8 @@ public class AStarPathfinder : MonoBehaviour {
     public List<AStarNode> open    = new List<AStarNode>();
     public List<AStarNode> closed  = new List<AStarNode>();
 
+	public AStarNode waypoint = null;
+
 	// Use this for initialization
 	void Start ()
 	{
@@ -25,31 +27,21 @@ public class AStarPathfinder : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
 	{
-        /*
-        Vector3 fwd = _.playerBulletSpawn.TransformDirection(Vector3.forward);
-		RaycastHit hit;
-        if (Physics.Raycast(_.playerBulletSpawn.position, fwd, out hit))
-        {
-            destination = nearestNode(hit.point);
-            clearLists();
-        }
-        */
 
         if (destination != null)
         {
+			// clear the open list
 			clearLists();
 
-			// clear the open list
-			open = new List<AStarNode>();
 			// open the start position
 			open.Add(current);
 
             calculatePathTo(destination);
-            //displayPath();
 
 			allNodesGray();
 			colorizeClosedPath();
 			destination = null;
+			waypoint = nearestClosed(gameObject.transform.position);
         }
 		
 	}
@@ -71,6 +63,25 @@ public class AStarPathfinder : MonoBehaviour {
 			}
 		}
 
+		return nearest;
+	}
+
+	public AStarNode nearestClosed(Vector3 pos)
+	{
+		AStarNode nearest = null;
+		
+		for ( int i=0; i < closed.Count; i++ ){
+			if ( nearest == null ){
+				nearest = closed[i];
+			} else {
+				float distanceToCurrent = Vector3.Distance(pos, closed[i].pos);
+				float distanceToNearest = Vector3.Distance(pos, nearest.pos);
+				if ( distanceToCurrent < distanceToNearest ){
+					nearest = closed[i];
+				}
+			}
+		}
+		
 		return nearest;
 	}
 
@@ -128,8 +139,22 @@ public class AStarPathfinder : MonoBehaviour {
         return temp;
     }
 
+	public List<AStarNode> getAdjacentNodesByRelationship(AStarNode asn)
+	{
+		List<AStarNode> temp = new List<AStarNode>();
+		if ( asn.north != null ){ temp.Add (asn.north); }
+		if ( asn.northEast != null ){ temp.Add (asn.northEast); }
+		if ( asn.east != null ){ temp.Add (asn.east); }
+		if ( asn.southEast != null ){ temp.Add (asn.southEast); }
+		if ( asn.south != null ){ temp.Add (asn.south); }
+		if ( asn.southWest != null ){ temp.Add (asn.southWest); }
+		if ( asn.west != null ){ temp.Add (asn.west); }
+		if ( asn.northWest != null ){ temp.Add (asn.northWest); }
+		return temp;
+	}
+	
 	public void displayPath(){
-
+		
 		if ( GameObject.Find("Debugging") != null ){
 
             foreach (Transform child in GameObject.Find("Debugging").transform)
@@ -176,14 +201,6 @@ public class AStarPathfinder : MonoBehaviour {
     }
 
 	public void calculatePathTo(AStarNode destination){
-
-//      // clear the open list
-//      open = new List<AStarNode>();
-//		// open the start position
-//		open.Add(current);
-
-//		// open the adjacent nodes
-//		open.AddRange(getAdjacentNodesByName(current));
 		
 		// clear duplicates
 		open.Distinct().ToList();
@@ -223,7 +240,7 @@ public class AStarPathfinder : MonoBehaviour {
 		current = bestChoice;
 
 		// open the adjacent nodes
-		foreach ( AStarNode n in getAdjacentNodesByName(current) ){
+		foreach ( AStarNode n in getAdjacentNodesByRelationship(current) ){
 			// walkable and not on the closed list
 			if ( n.walkable && !closed.Contains(n) ){
 				AStarNode temp = n;
@@ -268,7 +285,7 @@ public class AStarPathfinder : MonoBehaviour {
 		AStarNode n = destination;
 		while ( n != null  && n.parent != null ){
 			GameObject t = GameObject.Find (n.pos.ToString());
-			t.GetComponent<Renderer>().material.color = Color.green;
+			t.GetComponent<Renderer>().material.color = Color.black;
 			t.transform.localScale = new Vector3(.25f, .25f, .25f);
 			n = n.parent;
 		}
