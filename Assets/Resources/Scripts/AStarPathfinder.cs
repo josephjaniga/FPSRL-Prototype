@@ -21,6 +21,10 @@ public class AStarPathfinder : MonoBehaviour {
 
 	public AStarNode bestChoice = null;
 
+	// path update speed
+	public float pathCalculateCD = 5f;
+	public float lastPathCalculate = -1f;
+
 	// Use this for initialization
 	void Start ()
 	{
@@ -31,17 +35,14 @@ public class AStarPathfinder : MonoBehaviour {
 	void Update ()
 	{
 
-        if (destination != null)
+		if ( pathCalculateCD + lastPathCalculate <= Time.time )
         {
-			// open the start position
             allNodesGray();
-
-            calculatePathTo(destination);
-
-            colorizeWaypoints();
-
-            destination = null;
+			crunchPath();
+			lastPathCalculate = Time.time;
         }
+
+		colorizeWaypoints();
 
 		
 	}
@@ -202,10 +203,9 @@ public class AStarPathfinder : MonoBehaviour {
 
     }
 
+
 	public void calculatePathTo(AStarNode destination){
-		
-		//Debug.Log(destination.pos.ToString());
-		
+
 		// clear duplicates
 		open.Distinct().ToList();
 		closed.Distinct().ToList();
@@ -235,38 +235,48 @@ public class AStarPathfinder : MonoBehaviour {
 		
 		if ( bestChoice != null ){
 			
-			if ( bestChoice == destination ){
-				bestChoice.parent = current;
-			}
-			
 			// make the switch
 			open.Remove(bestChoice);
 			closed.Add(bestChoice);
 			closed.Distinct().ToList();
 			current = bestChoice;
-			
-			// open the adjacent nodes
-			foreach ( AStarNode n in getAdjacentNodesByRelationship(current) ){
-				// walkable and not on the closed list
-				if ( n.walkable && !closed.Contains(n) ){
-					AStarNode temp = n;
-					if (!open.Contains(temp)) {// not on open list?
-						open.Add(temp);
-						temp.parent = current;
-						calculateCosts(current, ref temp, destination);
-					} else if (temp.G < current.G) {
-						temp.parent = current;
-						calculateCosts(current, ref temp, destination);
+
+			if ( current != destination && open.Count != 0 ){
+				
+				// open the adjacent nodes
+				foreach ( AStarNode n in getAdjacentNodes(current) ){
+					// walkable and not on the closed list
+					if ( n.walkable && !closed.Contains(n) ){
+						AStarNode temp = n;
+						if (!open.Contains(temp)) {// not on open list?
+							open.Add(temp);
+							temp.parent = current;
+							calculateCosts(current, ref temp, destination);
+						} else if (temp.G < current.G) {
+							temp.parent = current;
+							calculateCosts(current, ref temp, destination);
+						}
 					}
 				}
+				
+				// keep calculating
+				calculatePathTo(destination);
+				
+			} else {
+				
+				// set the waypoints
+				waypoints.Clear();
+				AStarNode n = destination;
+				while ( n != null ){
+					waypoints.Push(n);
+					n = n.parent;
+				}
+				waypointDisplay = waypoints.ToArray();
+				
 			}
-	
-		}
-		
-		if ( current != destination && open.Count != 0 ){
-			// keep calculating
-			calculatePathTo(destination);
+
 		} else {
+			
 			// set the waypoints
 			waypoints.Clear();
 			AStarNode n = destination;
@@ -275,8 +285,10 @@ public class AStarPathfinder : MonoBehaviour {
 				n = n.parent;
 			}
 			waypointDisplay = waypoints.ToArray();
+			
 		}
-
+		
+	
 
 	}
 
@@ -353,5 +365,81 @@ public class AStarPathfinder : MonoBehaviour {
 		}
 	}
 	
+
+
+	/**
+	 *  NEW PATHING
+     */
+
 	
+	public void crunchPath(){
+		
+		if ( !closed.Contains(destination) && open.Count > 0 ){
+			// get lowest F COST on open
+			setBestChoice();
+			current = bestChoice;
+			
+			// move bestChoice to closed list
+			open.Remove(bestChoice);
+			closed.Add(bestChoice);
+			
+			// for each adjacent 8 to current
+			foreach ( AStarNode n in getAdjacentNodes(current) ){
+				// ignore if not walkabled or already closed
+				if ( n.walkable && !closed.Contains(n) ){
+					// if not open
+					AStarNode temp = n;
+					if ( !open.Contains(temp) ){
+						// add to open, set this.parent = current, recalculate costs
+						temp.parent = current;
+						calculateCosts(current, ref temp, destination);
+						open.Add(temp);
+					} else if (temp.G < current.G) {
+						// else if open
+						// if cost is better than current G
+						// set this.parent = current, recalculate costs
+						temp.parent = current;
+						calculateCosts(current, ref temp, destination);
+					}
+				}
+			}
+
+			// another pass
+			crunchPath();
+
+		} else {
+
+			//DONE
+			// set the waypoints
+			waypoints.Clear();
+			AStarNode n = destination;
+			while ( n != null ){
+				waypoints.Push(n);
+				n = n.parent;
+			}
+			waypointDisplay = waypoints.ToArray();
+
+		}
+
+	}
+
+	public void setBestChoice(){
+
+		bestChoice = null;
+		
+		// assign values to the opens
+		for ( int i=0; i<open.Count; i++ ){
+			AStarNode temp = open[i];
+			calculateCosts(current, ref temp, destination);
+			if ( bestChoice == null ){
+				bestChoice = temp;
+			} else {
+				if ( bestChoice.F > temp.F ){
+					bestChoice = temp;
+				}
+			}
+		}
+
+	}
+
 }

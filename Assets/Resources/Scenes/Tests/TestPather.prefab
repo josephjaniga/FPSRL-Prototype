@@ -27,7 +27,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 190694}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2, y: 0, z: 2}
+  m_LocalPosition: {x: 2, y: 2, z: 2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -88,6 +88,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   t: {fileID: 0}
+  asp: {fileID: 0}
+  speed: .100000001
+  pathUpdateCD: .100000001
+  lastPathUpdate: -1
+  currentWaypoint:
+    parentPosition: {x: 0, y: 0, z: 0}
+    HV_cost: 10
+    D_cost: 14
+    unitSize: 2
+    walkable: 1
+    F: 0
+    G: 0
+    H: 0
+    pos: {x: 0, y: 0, z: 0}
+    nodeName: 
+  normalizedWaypoint: {x: 0, y: 0, z: 0}
 --- !u!114 &11459390
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -100,6 +116,55 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   asnm: {fileID: 0}
+  source:
+    parentPosition: {x: 0, y: 0, z: 0}
+    HV_cost: 10
+    D_cost: 14
+    unitSize: 2
+    walkable: 1
+    F: 0
+    G: 0
+    H: 0
+    pos: {x: 0, y: 0, z: 0}
+    nodeName: 
+  destination:
+    parentPosition: {x: 0, y: 0, z: 0}
+    HV_cost: 10
+    D_cost: 14
+    unitSize: 2
+    walkable: 1
+    F: 0
+    G: 0
+    H: 0
+    pos: {x: 0, y: 0, z: 0}
+    nodeName: 
+  current:
+    parentPosition: {x: 0, y: 0, z: 0}
+    HV_cost: 10
+    D_cost: 14
+    unitSize: 2
+    walkable: 1
+    F: 0
+    G: 0
+    H: 0
+    pos: {x: 0, y: 0, z: 0}
+    nodeName: 
+  open: []
+  closed: []
+  waypointDisplay: []
+  bestChoice:
+    parentPosition: {x: 0, y: 0, z: 0}
+    HV_cost: 10
+    D_cost: 14
+    unitSize: 2
+    walkable: 1
+    F: 0
+    G: 0
+    H: 0
+    pos: {x: 0, y: 0, z: 0}
+    nodeName: 
+  pathCalculateCD: 5
+  lastPathCalculate: -1
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

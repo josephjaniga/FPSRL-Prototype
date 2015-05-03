@@ -26,46 +26,50 @@ public class aStarPathTowardTarget : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		
-		if ( currentWaypoint == null && asp.waypoints.Count > 0 ){
-			// set a waypoint if blank
-			currentWaypoint = asp.waypoints.Pop();
-			normalizedWaypoint = currentWaypoint.pos;
-			normalizedWaypoint.y = gameObject.transform.position.y;
-		} else if ( Vector3.Distance(gameObject.transform.position, normalizedWaypoint) < .1f && asp.waypoints.Count > 0 ){
-			// if reached current waypoint set next
-			currentWaypoint = asp.waypoints.Pop();
-			normalizedWaypoint = currentWaypoint.pos;
-			normalizedWaypoint.y = gameObject.transform.position.y;
-		}
+//		if ( currentWaypoint == null && asp.waypoints.Count > 0 ){
+//			// set a waypoint if blank
+//			currentWaypoint = asp.waypoints.Pop();
+//			normalizedWaypoint = currentWaypoint.pos;
+//			normalizedWaypoint.y = gameObject.transform.position.y;
+//		} else if ( Vector3.Distance(gameObject.transform.position, normalizedWaypoint) < .1f && asp.waypoints.Count > 0 ){
+//			// if reached current waypoint set next
+//			currentWaypoint = asp.waypoints.Pop();
+//			normalizedWaypoint = currentWaypoint.pos;
+//			normalizedWaypoint.y = gameObject.transform.position.y;
+//		}
+//
+//		if ( gameObject.GetComponent<Target>().target != null && anim != null && !anim.GetBool("Attacking") ){
+//			// if theres a target and a waypoint
+//			if ( asp.waypoints.Count > 0 && currentWaypoint != null ){
+//				Vector3 point = currentWaypoint.pos;
+//				point.y = gameObject.transform.position.y;
+//				transform.LookAt(point);
+//			    anim.SetFloat("Forward", speed);
+//			}
+//		} else {
+//            if (anim != null) {
+//                anim.SetFloat("Forward", 0.0f);
+//            }
+//		}
 
 		if ( t.target != null && pathUpdateCD + lastPathUpdate <= Time.time ) {
 			targetUpdated();
 			lastPathUpdate = Time.time;
 		}
 
-		if ( gameObject.GetComponent<Target>().target != null && anim != null && !anim.GetBool("Attacking") ){
-			// if theres a target and a waypoint
-			if ( asp.waypoints.Count > 0 && currentWaypoint != null ){
-				Vector3 point = currentWaypoint.pos;
-				point.y = gameObject.transform.position.y;
-				transform.LookAt(point);
-			    anim.SetFloat("Forward", speed);
-			}
-		} else {
-            if (anim != null) {
-                anim.SetFloat("Forward", 0.0f);
-            }
-		}
-
 	}
 
 	public void targetUpdated(){
 		//Debug.Log ("targetUpdated");
-        asp.clearLists();
 		asp.destination = asp.nearestNode(t.target.transform.position);
 		asp.source = asp.nearestNode(gameObject.transform.position);
-		asp.current = asp.source;
-        asp.open.Add(asp.current);
+
+		if ( asp.current == null ){
+			asp.current = asp.source;
+		}
+
+		asp.clearLists();
+		asp.open.Add(asp.source);
 	}
 	
 }
