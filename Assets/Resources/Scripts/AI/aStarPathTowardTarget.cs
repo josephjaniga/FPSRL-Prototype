@@ -10,7 +10,7 @@ public class aStarPathTowardTarget : MonoBehaviour {
 	Animator anim;
 	
 	// path update speed
-	public float pathUpdateCD = 1f;
+	public float pathUpdateCD = 5f;
 	public float lastPathUpdate = -1f;
 	
 	public AStarNode currentWaypoint = null;
@@ -61,9 +61,11 @@ public class aStarPathTowardTarget : MonoBehaviour {
 
 	public void targetUpdated(){
 		//Debug.Log ("targetUpdated");
+        asp.clearLists();
 		asp.destination = asp.nearestNode(t.target.transform.position);
 		asp.source = asp.nearestNode(gameObject.transform.position);
 		asp.current = asp.source;
+        asp.open.Add(asp.current);
 	}
 	
 }

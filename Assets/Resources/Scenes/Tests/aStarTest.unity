@@ -1517,6 +1517,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5bccaed38eb754c4e9587fad2abba957, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  all: []
   pending: 0
 --- !u!114 &1224144331
 MonoBehaviour:

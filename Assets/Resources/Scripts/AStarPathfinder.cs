@@ -34,12 +34,15 @@ public class AStarPathfinder : MonoBehaviour {
         if (destination != null)
         {
 			// open the start position
-			// open.Add(current);
+            allNodesGray();
+
+            calculatePathTo(destination);
+
+            colorizeWaypoints();
+
+            destination = null;
         }
-		
-	    calculatePathTo(destination);
-		allNodesGray();
-		colorizeWaypoints();
+
 		
 	}
 
@@ -138,7 +141,7 @@ public class AStarPathfinder : MonoBehaviour {
 
 	public List<AStarNode> getAdjacentNodesByRelationship(AStarNode asn)
 	{
-		Debug.Log(asn);
+		//Debug.Log(asn);
 		
 		List<AStarNode> temp = new List<AStarNode>();
 		if ( asn.north != null ){ temp.Add (asn.north); }

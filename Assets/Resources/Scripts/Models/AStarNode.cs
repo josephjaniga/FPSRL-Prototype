@@ -5,7 +5,21 @@ using System.Collections;
 public class AStarNode : System.Object {
 
     // pathing data
-    public AStarNode parent = null;
+    private AStarNode _parent;
+
+    public AStarNode parent{
+        get
+        {
+            return _parent;
+        }
+        set
+        {
+            _parent = value;
+            parentPosition = value.pos;
+        }
+    }
+
+    public Vector3 parentPosition;
 
     // eight cardinal directions
     public AStarNode north      = null;
@@ -30,5 +44,11 @@ public class AStarNode : System.Object {
 	public Vector3 pos = new Vector3(0f,0f,0f);
 
 	public string nodeName = "";
+
+    public void setParent(AStarNode newParent)
+    {
+        parent = newParent;
+        parentPosition = newParent.pos;
+    }
 
 }
