@@ -22,7 +22,7 @@ public class AStarPathfinder : MonoBehaviour {
 	public AStarNode bestChoice = null;
 
 	// path update speed
-	public float pathCalculateCD = 5f;
+	public float pathCalculateCD = 0.2f;
 	public float lastPathCalculate = -1f;
 
 	// Use this for initialization
@@ -35,15 +35,15 @@ public class AStarPathfinder : MonoBehaviour {
 	void Update ()
 	{
 
-		if ( pathCalculateCD + lastPathCalculate <= Time.time )
+		if ( pathCalculateCD + lastPathCalculate <= Time.time && destination != null )
         {
             allNodesGray();
 			crunchPath();
 			lastPathCalculate = Time.time;
+			destination = null;
         }
 
 		colorizeWaypoints();
-
 		
 	}
 
@@ -86,12 +86,12 @@ public class AStarPathfinder : MonoBehaviour {
 		return nearest;
 	}
 
-	public void AStarInit(){
-		asnm = GameObject.Find ("A*").GetComponent<AStarNodeManager>();
-		source = nearestNode(_.player.transform.position);
-		current = source;
-		destination = asnm.all[Random.Range(0, asnm.all.Count-1)];
-	}
+//	public void AStarInit(){
+//		asnm = GameObject.Find ("A*").GetComponent<AStarNodeManager>();
+//		source = nearestNode(_.player.transform.position);
+//		current = source;
+//		destination = asnm.all[Random.Range(0, asnm.all.Count-1)];
+//	}
 
 	public List<AStarNode> getAdjacentNodes(AStarNode asn){
 		// eight cardinal directions
@@ -156,52 +156,52 @@ public class AStarPathfinder : MonoBehaviour {
 		return temp;
 	}
 	
-	public void displayPath(){
-		
-		if ( GameObject.Find("Debugging") != null ){
-
-            foreach (Transform child in GameObject.Find("Debugging").transform)
-            {
-                Destroy(child.gameObject);
-            }
-
-			GameObject prefab = Resources.Load("Prefabs/aStarNode") as GameObject;
-			
-			GameObject src = Instantiate( prefab, source.pos, Quaternion.identity ) as GameObject;
-			src.GetComponent<Renderer>().material.color = Color.green;
-			src.transform.localScale = new Vector3(1f, 0.05f, 1f);
-			src.name = "Source";
-			src.transform.SetParent(GameObject.Find ("Debugging").transform);
-			
-			GameObject dest = Instantiate( prefab, destination.pos, Quaternion.identity ) as GameObject;
-			dest.GetComponent<Renderer>().material.color = Color.red;
-			dest.transform.localScale = new Vector3(1f, 0.05f, 1f);
-			dest.name = "Destination";
-			dest.transform.SetParent(GameObject.Find ("Debugging").transform);
-			
-			// debug open
-            for ( int i=0; i<open.Count; i++ ){
-				// highlight the open list
-				GameObject tempOpen = Instantiate( prefab, open[i].pos, Quaternion.identity ) as GameObject;
-				tempOpen.GetComponent<Renderer>().material.color = Color.blue;
-				tempOpen.transform.localScale = new Vector3(1f, 0.040f, 1f);
-				tempOpen.name = "Open";
-				tempOpen.transform.SetParent(GameObject.Find ("Debugging").transform);
-			}
-            
-			// debug closed
-			for ( int i=0; i<closed.Count; i++ ){
-				// highlight the closed list
-				GameObject tempClosed = Instantiate( prefab, closed[i].pos, Quaternion.identity ) as GameObject;
-				tempClosed.GetComponent<Renderer>().material.color = Color.cyan;
-				tempClosed.transform.localScale = new Vector3(1f, 0.045f, 1f);
-				tempClosed.name = "Closed";
-				tempClosed.transform.SetParent(GameObject.Find ("Debugging").transform);
-			}
-
-        }
-
-    }
+//	public void displayPath(){
+//		
+//		if ( GameObject.Find("Debugging") != null ){
+//
+//            foreach (Transform child in GameObject.Find("Debugging").transform)
+//            {
+//                Destroy(child.gameObject);
+//            }
+//
+//			GameObject prefab = Resources.Load("Prefabs/aStarNode") as GameObject;
+//			
+//			GameObject src = Instantiate( prefab, source.pos, Quaternion.identity ) as GameObject;
+//			src.GetComponent<Renderer>().material.color = Color.green;
+//			src.transform.localScale = new Vector3(1f, 0.05f, 1f);
+//			src.name = "Source";
+//			src.transform.SetParent(GameObject.Find ("Debugging").transform);
+//			
+//			GameObject dest = Instantiate( prefab, destination.pos, Quaternion.identity ) as GameObject;
+//			dest.GetComponent<Renderer>().material.color = Color.red;
+//			dest.transform.localScale = new Vector3(1f, 0.05f, 1f);
+//			dest.name = "Destination";
+//			dest.transform.SetParent(GameObject.Find ("Debugging").transform);
+//			
+//			// debug open
+//            for ( int i=0; i<open.Count; i++ ){
+//				// highlight the open list
+//				GameObject tempOpen = Instantiate( prefab, open[i].pos, Quaternion.identity ) as GameObject;
+//				tempOpen.GetComponent<Renderer>().material.color = Color.blue;
+//				tempOpen.transform.localScale = new Vector3(1f, 0.040f, 1f);
+//				tempOpen.name = "Open";
+//				tempOpen.transform.SetParent(GameObject.Find ("Debugging").transform);
+//			}
+//            
+//			// debug closed
+//			for ( int i=0; i<closed.Count; i++ ){
+//				// highlight the closed list
+//				GameObject tempClosed = Instantiate( prefab, closed[i].pos, Quaternion.identity ) as GameObject;
+//				tempClosed.GetComponent<Renderer>().material.color = Color.cyan;
+//				tempClosed.transform.localScale = new Vector3(1f, 0.045f, 1f);
+//				tempClosed.name = "Closed";
+//				tempClosed.transform.SetParent(GameObject.Find ("Debugging").transform);
+//			}
+//
+//        }
+//
+//    }
 
 
 	public void calculatePathTo(AStarNode destination){
@@ -410,14 +410,21 @@ public class AStarPathfinder : MonoBehaviour {
 		} else {
 
 			//DONE
-			// set the waypoints
-			waypoints.Clear();
+			Stack<AStarNode> tempWaypoints = new Stack<AStarNode>();
+
 			AStarNode n = destination;
 			while ( n != null ){
-				waypoints.Push(n);
+				tempWaypoints.Push(n);
 				n = n.parent;
 			}
-			waypointDisplay = waypoints.ToArray();
+
+			if ( waypoints != tempWaypoints ){
+				waypoints.Clear();
+				waypoints = tempWaypoints;
+				waypointDisplay = waypoints.ToArray();
+				gameObject.SendMessage("PathCalculated", SendMessageOptions.DontRequireReceiver);
+			}
+
 
 		}
 

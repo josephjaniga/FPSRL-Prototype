@@ -10,12 +10,14 @@ public class aStarPathTowardTarget : MonoBehaviour {
 	Animator anim;
 	
 	// path update speed
-	public float pathUpdateCD = 5f;
+	public float pathUpdateCD = 0.3f;
 	public float lastPathUpdate = -1f;
 	
 	public AStarNode currentWaypoint = null;
-	public Vector3 normalizedWaypoint = Vector3.zero;
-	
+	public Vector3 normalizedWaypoint;
+
+	public float D = 0f;
+
 	// Use this for initialization
 	void Start () {
         t = gameObject.GetComponent<Target>();
@@ -25,36 +27,52 @@ public class aStarPathTowardTarget : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
-//		if ( currentWaypoint == null && asp.waypoints.Count > 0 ){
-//			// set a waypoint if blank
-//			currentWaypoint = asp.waypoints.Pop();
-//			normalizedWaypoint = currentWaypoint.pos;
-//			normalizedWaypoint.y = gameObject.transform.position.y;
-//		} else if ( Vector3.Distance(gameObject.transform.position, normalizedWaypoint) < .1f && asp.waypoints.Count > 0 ){
-//			// if reached current waypoint set next
-//			currentWaypoint = asp.waypoints.Pop();
-//			normalizedWaypoint = currentWaypoint.pos;
-//			normalizedWaypoint.y = gameObject.transform.position.y;
+
+		D = Vector3.Distance(gameObject.transform.position, normalizedWaypoint);
+
+		if ( D < 1f && asp.waypoints.Count > 0 ){
+			// if reached current waypoint set next
+			currentWaypoint = asp.waypoints.Pop();
+			normalizedWaypoint = currentWaypoint.pos;
+			normalizedWaypoint.y = gameObject.transform.position.y;
+		}
+
+//		if ( currentWaypoint == null ){
+//			if ( asp.waypoints.Count > 0 ){
+//				// set a waypoint if blank and available
+//				currentWaypoint = asp.waypoints.Pop();
+//				normalizedWaypoint = currentWaypoint.pos;
+//				normalizedWaypoint.y = gameObject.transform.position.y;
+//			}
 //		}
 //
-//		if ( gameObject.GetComponent<Target>().target != null && anim != null && !anim.GetBool("Attacking") ){
-//			// if theres a target and a waypoint
-//			if ( asp.waypoints.Count > 0 && currentWaypoint != null ){
-//				Vector3 point = currentWaypoint.pos;
-//				point.y = gameObject.transform.position.y;
-//				transform.LookAt(point);
-//			    anim.SetFloat("Forward", speed);
+//		if ( currentWaypoint != null ){
+//			normalizedWaypoint = currentWaypoint.pos;
+//			normalizedWaypoint.y = gameObject.transform.position.y;
+//			if ( Vector3.Distance(gameObject.transform.position, normalizedWaypoint) < 1f && asp.waypoints.Count > 0 ){
+//				// if reached current waypoint set next
+//				currentWaypoint = asp.waypoints.Pop();
+//				normalizedWaypoint = currentWaypoint.pos;
+//				normalizedWaypoint.y = gameObject.transform.position.y;
 //			}
-//		} else {
-//            if (anim != null) {
-//                anim.SetFloat("Forward", 0.0f);
-//            }
 //		}
+
 
 		if ( t.target != null && pathUpdateCD + lastPathUpdate <= Time.time ) {
 			targetUpdated();
 			lastPathUpdate = Time.time;
+
+			if ( gameObject.GetComponent<Target>().target != null && anim != null && !anim.GetBool("Attacking") ){
+				// if theres a target and a waypoint
+				Vector3 point = normalizedWaypoint;
+				transform.LookAt(point);
+				anim.SetFloat("Forward", speed);
+			} else {
+				if (anim != null) {
+					anim.SetFloat("Forward", 0.0f);
+				}
+			}
+
 		}
 
 	}
@@ -71,5 +89,20 @@ public class aStarPathTowardTarget : MonoBehaviour {
 		asp.clearLists();
 		asp.open.Add(asp.source);
 	}
+
+	public void PathCalculated(){
+		if ( asp.waypoints.Count > 0 ){
+			// set a waypoint if blank and available
+			currentWaypoint = asp.waypoints.Pop();
+			normalizedWaypoint = currentWaypoint.pos;
+			normalizedWaypoint.y = gameObject.transform.position.y;
+		}
+	}
 	
+	void OnDrawGizmos () {
+		if ( currentWaypoint != null ){
+			Gizmos.color = Color.blue;
+			Gizmos.DrawSphere (currentWaypoint.pos, .3f);
+		}
+	}
 }
