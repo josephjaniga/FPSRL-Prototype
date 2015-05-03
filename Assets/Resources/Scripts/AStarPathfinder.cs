@@ -13,6 +13,10 @@ public class AStarPathfinder : MonoBehaviour {
     public AStarNode destination = null;
 	public AStarNode current = null;
 
+    public Vector3 sourcePosition;
+    public Vector3 destinationPosition;
+    public Vector3 currentPosition;
+
     public List<AStarNode> open    = new List<AStarNode>();
     public List<AStarNode> closed  = new List<AStarNode>();
 
@@ -285,7 +289,7 @@ public class AStarPathfinder : MonoBehaviour {
 		AStarNode n = destination;
 		while ( n != null  && n.parent != null ){
 			GameObject t = GameObject.Find (n.pos.ToString());
-			t.GetComponent<Renderer>().material.color = Color.black;
+			t.GetComponent<Renderer>().material.color = Color.red;
 			t.transform.localScale = new Vector3(.25f, .25f, .25f);
 			n = n.parent;
 		}
