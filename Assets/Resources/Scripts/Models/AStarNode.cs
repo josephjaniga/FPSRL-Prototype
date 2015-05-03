@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class AStarNode {
+[System.Serializable]
+public class AStarNode : System.Object {
 
     // pathing data
     public AStarNode parent = null;

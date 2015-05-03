@@ -7,20 +7,19 @@ public class AStarPathfinder : MonoBehaviour {
 
 	public AStarNodeManager asnm;
 
-	public AStarNode concreteNode = new AStarNode();
+	protected AStarNode concreteNode = new AStarNode();
 
     public AStarNode source = null;
     public AStarNode destination = null;
 	public AStarNode current = null;
 
-    public Vector3 sourcePosition;
-    public Vector3 destinationPosition;
-    public Vector3 currentPosition;
-
     public List<AStarNode> open    = new List<AStarNode>();
     public List<AStarNode> closed  = new List<AStarNode>();
 
-	public AStarNode waypoint = null;
+	public Stack<AStarNode> waypoints = new Stack<AStarNode>();
+	public AStarNode[] waypointDisplay;
+
+	public AStarNode bestChoice = null;
 
 	// Use this for initialization
 	void Start ()
@@ -34,19 +33,13 @@ public class AStarPathfinder : MonoBehaviour {
 
         if (destination != null)
         {
-			// clear the open list
-			clearLists();
-
 			// open the start position
-			open.Add(current);
-
-            calculatePathTo(destination);
-
-			allNodesGray();
-			colorizeClosedPath();
-			destination = null;
-			waypoint = nearestClosed(gameObject.transform.position);
+			// open.Add(current);
         }
+		
+	    calculatePathTo(destination);
+		allNodesGray();
+		colorizeWaypoints();
 		
 	}
 
@@ -145,6 +138,8 @@ public class AStarPathfinder : MonoBehaviour {
 
 	public List<AStarNode> getAdjacentNodesByRelationship(AStarNode asn)
 	{
+		Debug.Log(asn);
+		
 		List<AStarNode> temp = new List<AStarNode>();
 		if ( asn.north != null ){ temp.Add (asn.north); }
 		if ( asn.northEast != null ){ temp.Add (asn.northEast); }
@@ -206,6 +201,8 @@ public class AStarPathfinder : MonoBehaviour {
 
 	public void calculatePathTo(AStarNode destination){
 		
+		//Debug.Log(destination.pos.ToString());
+		
 		// clear duplicates
 		open.Distinct().ToList();
 		closed.Distinct().ToList();
@@ -218,14 +215,10 @@ public class AStarPathfinder : MonoBehaviour {
 			}
 		}
 
-		AStarNode bestChoice = null;
+		bestChoice = null;
 
 		// assign values to the opens
 		for ( int i=0; i<open.Count; i++ ){
-			if ( open[i] == destination ){
-				bestChoice = open[i];
-				break;
-			}
 			AStarNode temp = open[i];
 			calculateCosts(current, ref temp, destination);
 			if ( bestChoice == null ){
@@ -236,32 +229,51 @@ public class AStarPathfinder : MonoBehaviour {
 				}
 			}
 		}
-
-		// make the switch
-		open.Remove(bestChoice);
-		closed.Add(bestChoice);
-		closed.Distinct().ToList();
-		current = bestChoice;
-
-		// open the adjacent nodes
-		foreach ( AStarNode n in getAdjacentNodesByRelationship(current) ){
-			// walkable and not on the closed list
-			if ( n.walkable && !closed.Contains(n) ){
-				AStarNode temp = n;
-				if (!open.Contains(temp)) {// on open list?
-					open.Add(temp);
-					temp.parent = current;
-					calculateCosts(current, ref temp, destination);
-				} else if (temp.G < current.G) {
-					temp.parent = current;
-					calculateCosts(current, ref temp, destination);
+		
+		if ( bestChoice != null ){
+			
+			if ( bestChoice == destination ){
+				bestChoice.parent = current;
+			}
+			
+			// make the switch
+			open.Remove(bestChoice);
+			closed.Add(bestChoice);
+			closed.Distinct().ToList();
+			current = bestChoice;
+			
+			// open the adjacent nodes
+			foreach ( AStarNode n in getAdjacentNodesByRelationship(current) ){
+				// walkable and not on the closed list
+				if ( n.walkable && !closed.Contains(n) ){
+					AStarNode temp = n;
+					if (!open.Contains(temp)) {// not on open list?
+						open.Add(temp);
+						temp.parent = current;
+						calculateCosts(current, ref temp, destination);
+					} else if (temp.G < current.G) {
+						temp.parent = current;
+						calculateCosts(current, ref temp, destination);
+					}
 				}
 			}
+	
+		}
+		
+		if ( current != destination && open.Count != 0 ){
+			// keep calculating
+			calculatePathTo(destination);
+		} else {
+			// set the waypoints
+			waypoints.Clear();
+			AStarNode n = destination;
+			while ( n != null ){
+				waypoints.Push(n);
+				n = n.parent;
+			}
+			waypointDisplay = waypoints.ToArray();
 		}
 
-		if ( current != destination && open.Count != 0 ){
-			calculatePathTo(destination);
-		}
 
 	}
 
@@ -273,7 +285,7 @@ public class AStarPathfinder : MonoBehaviour {
 	public void allNodesGray (){
 		// make all the nodes color white
 		foreach ( Transform child in GameObject.Find ("A*").transform ){
-			child.gameObject.GetComponent<Renderer>().material.color = Color.gray;
+			child.gameObject.GetComponent<Renderer>().material.color = Color.white;
 			child.localScale = new Vector3(.1f, .1f, .1f);
 		}
 	}
@@ -287,26 +299,30 @@ public class AStarPathfinder : MonoBehaviour {
 //		}
 
 		AStarNode n = destination;
-		while ( n != null  && n.parent != null ){
+		while ( n != null ){
 			GameObject t = GameObject.Find (n.pos.ToString());
 			t.GetComponent<Renderer>().material.color = Color.red;
 			t.transform.localScale = new Vector3(.25f, .25f, .25f);
 			n = n.parent;
 		}
 
+	}
+	
+	public void colorizeWaypoints(){
+
+		Stack<AStarNode> temp = waypoints;
+		while ( temp.Count > 0 ){
+			AStarNode n = temp.Pop();
+			GameObject t = GameObject.Find (n.pos.ToString());
+			if (t != null){
+				t.GetComponent<Renderer>().material.color = Color.red;
+				t.transform.localScale = new Vector3(.25f, .25f, .25f);
+			}
+		}
 
 	}
 
 	public void calculateCosts(AStarNode current, ref AStarNode testNode, AStarNode destination){
-
-//		// movement cost
-//		if ( testNode.pos.x == current.pos.x || testNode.pos.z == current.pos.z ){
-//			// horizontal or vertical
-//			testNode.G = testNode.HV_cost;
-//		} else {
-//			// diagonal
-//			testNode.G = testNode.D_cost;
-//		}
 
 		// FIXME: redo G cost - MovementCost
 		testNode.G = calculateMovementCost(testNode);
