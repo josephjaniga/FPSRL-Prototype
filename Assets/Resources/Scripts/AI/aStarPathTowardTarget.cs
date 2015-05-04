@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class aStarPathTowardTarget : MonoBehaviour {
 
@@ -16,7 +17,13 @@ public class aStarPathTowardTarget : MonoBehaviour {
 	public AStarNode currentWaypoint = null;
 	public Vector3 normalizedWaypoint;
 
+	public bool reachedWaypoint = false;
+
 	public float D = 0f;
+
+	public GameObject lastTarget = null;
+
+	public List<AStarNode> completeWaypoints = new List<AStarNode>();
 
 	// Use this for initialization
 	void Start () {
@@ -28,75 +35,97 @@ public class aStarPathTowardTarget : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-		D = Vector3.Distance(gameObject.transform.position, normalizedWaypoint);
+		// update target position
+		if ( t.target != null ){
+			asp.destination = asp.nearestNode(t.target.transform.position);
+		}
+		// update my position
+		asp.source = asp.nearestNode(gameObject.transform.position);
 
-		if ( D < 1f && asp.waypoints.Count > 0 ){
-			// if reached current waypoint set next
-			currentWaypoint = asp.waypoints.Pop();
+		// if we have a waypoint
+		if ( currentWaypoint != null ){
+
+			// account for different heights of nodes and dont factor that into distance calculations
 			normalizedWaypoint = currentWaypoint.pos;
 			normalizedWaypoint.y = gameObject.transform.position.y;
-		}
-
-//		if ( currentWaypoint == null ){
-//			if ( asp.waypoints.Count > 0 ){
-//				// set a waypoint if blank and available
-//				currentWaypoint = asp.waypoints.Pop();
-//				normalizedWaypoint = currentWaypoint.pos;
-//				normalizedWaypoint.y = gameObject.transform.position.y;
+			
+			// determine the distance to the normalized waypoint
+			D = Vector3.Distance(gameObject.transform.position, normalizedWaypoint);
+			
+			// if the target has changed update it
+//			if ( lastTarget != t.target ){
+//				lastTarget = t.target;
+//				targetUpdated();
 //			}
-//		}
+
+			// keep moving toward the waypoint
+			if ( !reachedWaypoint ){
+				
+				if ( anim != null && !anim.GetBool("Attacking") ){
+					// if theres a target and a waypoint
+					Vector3 point = normalizedWaypoint;
+					transform.LookAt(point);
+					anim.SetFloat("Forward", speed);
+				} else {
+					if (anim != null) {
+						anim.SetFloat("Forward", 0.0f);
+					}
+				}
 //
-//		if ( currentWaypoint != null ){
-//			normalizedWaypoint = currentWaypoint.pos;
-//			normalizedWaypoint.y = gameObject.transform.position.y;
-//			if ( Vector3.Distance(gameObject.transform.position, normalizedWaypoint) < 1f && asp.waypoints.Count > 0 ){
-//				// if reached current waypoint set next
-//				currentWaypoint = asp.waypoints.Pop();
-//				normalizedWaypoint = currentWaypoint.pos;
-//				normalizedWaypoint.y = gameObject.transform.position.y;
-//			}
-//		}
-
-
-		if ( t.target != null && pathUpdateCD + lastPathUpdate <= Time.time ) {
-			targetUpdated();
-			lastPathUpdate = Time.time;
-
-			if ( gameObject.GetComponent<Target>().target != null && anim != null && !anim.GetBool("Attacking") ){
-				// if theres a target and a waypoint
-				Vector3 point = normalizedWaypoint;
-				transform.LookAt(point);
-				anim.SetFloat("Forward", speed);
+//				if ( anim == null ){
+//					gameObject.transform.Translate( (normalizedWaypoint - gameObject.transform.position) * Time.deltaTime/4f );
+//				}
+			
 			} else {
-				if (anim != null) {
-					anim.SetFloat("Forward", 0.0f);
+				//request a new waypoint
+				while ( asp.waypoints.Count > 0 && completeWaypoints.Contains(currentWaypoint) ){
+					currentWaypoint = asp.waypoints.Pop ();
 				}
 			}
 
+		} else {
+			// stop moving
+
 		}
 
-	}
+		// has reached waypoint
+		if ( D <= 0.1f ){
+			completeWaypoints.Add(currentWaypoint);
+			reachedWaypoint = true;
+		}
 
+		
+	}
+	
+	
+	// Should be called after target has changed
 	public void targetUpdated(){
-		//Debug.Log ("targetUpdated");
-		asp.destination = asp.nearestNode(t.target.transform.position);
-		asp.source = asp.nearestNode(gameObject.transform.position);
 
-		if ( asp.current == null ){
-			asp.current = asp.source;
+		if ( t.target != null ){
+			//Debug.Log ("targetUpdated");
+			asp.destination = asp.nearestNode(t.target.transform.position);
+			asp.source = asp.nearestNode(gameObject.transform.position);
+			
+			if ( asp.current == null || asp.current != asp.source ){
+				asp.current = asp.source;
+			}
+			
+			asp.clearLists();
+			asp.open.Add(asp.source);
 		}
 
-		asp.clearLists();
-		asp.open.Add(asp.source);
 	}
-
+	
+	/**
+	 * called back after last iteration of recursive AStarPathfinder::crunchPath()
+	 */
 	public void PathCalculated(){
-		if ( asp.waypoints.Count > 0 ){
-			// set a waypoint if blank and available
-			currentWaypoint = asp.waypoints.Pop();
-			normalizedWaypoint = currentWaypoint.pos;
-			normalizedWaypoint.y = gameObject.transform.position.y;
-		}
+//		if ( asp.waypoints.Count > 1 ){
+//			// set a waypoint if blank and available
+//			currentWaypoint = asp.waypoints.Pop();
+//			normalizedWaypoint = currentWaypoint.pos;
+//			normalizedWaypoint.y = gameObject.transform.position.y;
+//		}
 	}
 	
 	void OnDrawGizmos () {

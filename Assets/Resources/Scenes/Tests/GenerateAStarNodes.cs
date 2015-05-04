@@ -9,7 +9,6 @@ public class GenerateAStarNodes : MonoBehaviour {
 	void Start () {
 		asnm = GameObject.Find("A*").GetComponent<AStarNodeManager>();
 		asnm.pending++;
-		Debug.Log (asnm.pending);
 		generateNodes();
 	}
 

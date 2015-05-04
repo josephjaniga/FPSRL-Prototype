@@ -35,16 +35,23 @@ public class AStarPathfinder : MonoBehaviour {
 	void Update ()
 	{
 
+		if ( nearestNode(gameObject.transform.position) != source ){
+			source = nearestNode(gameObject.transform.position);
+		}
+
 		if ( pathCalculateCD + lastPathCalculate <= Time.time && destination != null )
         {
-            allNodesGray();
+			destination = nearestNode(gameObject.GetComponent<Target>().target.transform.position);
+			source = nearestNode(gameObject.transform.position);
+			current = source;
+			
+			clearLists();
+			open.Add(current);
+
 			crunchPath();
 			lastPathCalculate = Time.time;
 			destination = null;
         }
-
-		colorizeWaypoints();
-		
 	}
 
 	public AStarNode nearestNode(Vector3 pos)
@@ -85,13 +92,6 @@ public class AStarPathfinder : MonoBehaviour {
 		
 		return nearest;
 	}
-
-//	public void AStarInit(){
-//		asnm = GameObject.Find ("A*").GetComponent<AStarNodeManager>();
-//		source = nearestNode(_.player.transform.position);
-//		current = source;
-//		destination = asnm.all[Random.Range(0, asnm.all.Count-1)];
-//	}
 
 	public List<AStarNode> getAdjacentNodes(AStarNode asn){
 		// eight cardinal directions
@@ -142,8 +142,6 @@ public class AStarPathfinder : MonoBehaviour {
 
 	public List<AStarNode> getAdjacentNodesByRelationship(AStarNode asn)
 	{
-		//Debug.Log(asn);
-		
 		List<AStarNode> temp = new List<AStarNode>();
 		if ( asn.north != null ){ temp.Add (asn.north); }
 		if ( asn.northEast != null ){ temp.Add (asn.northEast); }
@@ -156,186 +154,86 @@ public class AStarPathfinder : MonoBehaviour {
 		return temp;
 	}
 	
-//	public void displayPath(){
+//	public void calculatePathTo(AStarNode destination){
+//
+//		// clear duplicates
+//		open.Distinct().ToList();
+//		closed.Distinct().ToList();
+//
+//		// remove all matching items in the open list from the closed list
+//		for ( int i=0; i<open.Count; i++ ){
+//			if ( closed.Contains(open[i]) ){
+//				open.RemoveAt(i);
+//				i--;
+//			}
+//		}
+//
+//		bestChoice = null;
+//
+//		// assign values to the opens
+//		for ( int i=0; i<open.Count; i++ ){
+//			AStarNode temp = open[i];
+//			calculateCosts(current, ref temp, destination);
+//			if ( bestChoice == null ){
+//				bestChoice = temp;
+//			} else {
+//				if ( bestChoice.F > temp.F ){
+//					bestChoice = temp;
+//				}
+//			}
+//		}
 //		
-//		if ( GameObject.Find("Debugging") != null ){
+//		if ( bestChoice != null ){
+//			
+//			// make the switch
+//			open.Remove(bestChoice);
+//			closed.Add(bestChoice);
+//			closed.Distinct().ToList();
+//			current = bestChoice;
 //
-//            foreach (Transform child in GameObject.Find("Debugging").transform)
-//            {
-//                Destroy(child.gameObject);
-//            }
-//
-//			GameObject prefab = Resources.Load("Prefabs/aStarNode") as GameObject;
-//			
-//			GameObject src = Instantiate( prefab, source.pos, Quaternion.identity ) as GameObject;
-//			src.GetComponent<Renderer>().material.color = Color.green;
-//			src.transform.localScale = new Vector3(1f, 0.05f, 1f);
-//			src.name = "Source";
-//			src.transform.SetParent(GameObject.Find ("Debugging").transform);
-//			
-//			GameObject dest = Instantiate( prefab, destination.pos, Quaternion.identity ) as GameObject;
-//			dest.GetComponent<Renderer>().material.color = Color.red;
-//			dest.transform.localScale = new Vector3(1f, 0.05f, 1f);
-//			dest.name = "Destination";
-//			dest.transform.SetParent(GameObject.Find ("Debugging").transform);
-//			
-//			// debug open
-//            for ( int i=0; i<open.Count; i++ ){
-//				// highlight the open list
-//				GameObject tempOpen = Instantiate( prefab, open[i].pos, Quaternion.identity ) as GameObject;
-//				tempOpen.GetComponent<Renderer>().material.color = Color.blue;
-//				tempOpen.transform.localScale = new Vector3(1f, 0.040f, 1f);
-//				tempOpen.name = "Open";
-//				tempOpen.transform.SetParent(GameObject.Find ("Debugging").transform);
+//			if ( current != destination && open.Count != 0 ){
+//				
+//				// open the adjacent nodes
+//				foreach ( AStarNode n in getAdjacentNodes(current) ){
+//					// walkable and not on the closed list
+//					if ( n.walkable && !closed.Contains(n) ){
+//						AStarNode temp = n;
+//						if (!open.Contains(temp)) {// not on open list?
+//							open.Add(temp);
+//							temp.parent = current;
+//							calculateCosts(current, ref temp, destination);
+//						} else if (temp.G < current.G) {
+//							temp.parent = current;
+//							calculateCosts(current, ref temp, destination);
+//						}
+//					}
+//				}
+//				
+//				// keep calculating
+//				calculatePathTo(destination);
+//				
+//			} else {
+//				
+//				// set the waypoints
+//				waypoints.Clear();
+//				AStarNode n = destination;
+//				while ( n != null ){
+//					waypoints.Push(n);
+//					n = n.parent;
+//				}
+//				waypointDisplay = waypoints.ToArray();
+//				
 //			}
-//            
-//			// debug closed
-//			for ( int i=0; i<closed.Count; i++ ){
-//				// highlight the closed list
-//				GameObject tempClosed = Instantiate( prefab, closed[i].pos, Quaternion.identity ) as GameObject;
-//				tempClosed.GetComponent<Renderer>().material.color = Color.cyan;
-//				tempClosed.transform.localScale = new Vector3(1f, 0.045f, 1f);
-//				tempClosed.name = "Closed";
-//				tempClosed.transform.SetParent(GameObject.Find ("Debugging").transform);
-//			}
 //
-//        }
+//		}
 //
-//    }
-
-
-	public void calculatePathTo(AStarNode destination){
-
-		// clear duplicates
-		open.Distinct().ToList();
-		closed.Distinct().ToList();
-
-		// remove all matching items in the open list from the closed list
-		for ( int i=0; i<open.Count; i++ ){
-			if ( closed.Contains(open[i]) ){
-				open.RemoveAt(i);
-				i--;
-			}
-		}
-
-		bestChoice = null;
-
-		// assign values to the opens
-		for ( int i=0; i<open.Count; i++ ){
-			AStarNode temp = open[i];
-			calculateCosts(current, ref temp, destination);
-			if ( bestChoice == null ){
-				bestChoice = temp;
-			} else {
-				if ( bestChoice.F > temp.F ){
-					bestChoice = temp;
-				}
-			}
-		}
-		
-		if ( bestChoice != null ){
-			
-			// make the switch
-			open.Remove(bestChoice);
-			closed.Add(bestChoice);
-			closed.Distinct().ToList();
-			current = bestChoice;
-
-			if ( current != destination && open.Count != 0 ){
-				
-				// open the adjacent nodes
-				foreach ( AStarNode n in getAdjacentNodes(current) ){
-					// walkable and not on the closed list
-					if ( n.walkable && !closed.Contains(n) ){
-						AStarNode temp = n;
-						if (!open.Contains(temp)) {// not on open list?
-							open.Add(temp);
-							temp.parent = current;
-							calculateCosts(current, ref temp, destination);
-						} else if (temp.G < current.G) {
-							temp.parent = current;
-							calculateCosts(current, ref temp, destination);
-						}
-					}
-				}
-				
-				// keep calculating
-				calculatePathTo(destination);
-				
-			} else {
-				
-				// set the waypoints
-				waypoints.Clear();
-				AStarNode n = destination;
-				while ( n != null ){
-					waypoints.Push(n);
-					n = n.parent;
-				}
-				waypointDisplay = waypoints.ToArray();
-				
-			}
-
-		} else {
-			
-			// set the waypoints
-			waypoints.Clear();
-			AStarNode n = destination;
-			while ( n != null ){
-				waypoints.Push(n);
-				n = n.parent;
-			}
-			waypointDisplay = waypoints.ToArray();
-			
-		}
-		
-	
-
-	}
+//	}
 
 	public void clearLists(){
 		open    = new List<AStarNode>();
 		closed  = new List<AStarNode>();
 	}
-
-	public void allNodesGray (){
-		// make all the nodes color white
-		foreach ( Transform child in GameObject.Find ("A*").transform ){
-			child.gameObject.GetComponent<Renderer>().material.color = Color.white;
-			child.localScale = new Vector3(.1f, .1f, .1f);
-		}
-	}
-
-	public void colorizeClosedPath(){
-
-//		foreach (AStarNode n in closed){
-//			GameObject t = GameObject.Find (n.pos.ToString());
-//			t.GetComponent<Renderer>().material.color = Color.green;
-//			t.transform.localScale = new Vector3(.25f, .25f, .25f);
-//		}
-
-		AStarNode n = destination;
-		while ( n != null ){
-			GameObject t = GameObject.Find (n.pos.ToString());
-			t.GetComponent<Renderer>().material.color = Color.red;
-			t.transform.localScale = new Vector3(.25f, .25f, .25f);
-			n = n.parent;
-		}
-
-	}
 	
-	public void colorizeWaypoints(){
-
-		Stack<AStarNode> temp = waypoints;
-		while ( temp.Count > 0 ){
-			AStarNode n = temp.Pop();
-			GameObject t = GameObject.Find (n.pos.ToString());
-			if (t != null){
-				t.GetComponent<Renderer>().material.color = Color.red;
-				t.transform.localScale = new Vector3(.25f, .25f, .25f);
-			}
-		}
-
-	}
 
 	public void calculateCosts(AStarNode current, ref AStarNode testNode, AStarNode destination){
 
@@ -418,12 +316,13 @@ public class AStarPathfinder : MonoBehaviour {
 				n = n.parent;
 			}
 
-			if ( waypoints != tempWaypoints ){
-				waypoints.Clear();
-				waypoints = tempWaypoints;
-				waypointDisplay = waypoints.ToArray();
-				gameObject.SendMessage("PathCalculated", SendMessageOptions.DontRequireReceiver);
-			}
+//			if ( waypoints != tempWaypoints ){
+//				waypoints.Clear();
+//				waypoints = tempWaypoints;
+//				waypointDisplay = new AStarNode[waypoints.Count];
+//				waypointDisplay = waypoints.ToArray();
+//				gameObject.SendMessage("PathCalculated", SendMessageOptions.DontRequireReceiver);
+//			}
 
 
 		}
