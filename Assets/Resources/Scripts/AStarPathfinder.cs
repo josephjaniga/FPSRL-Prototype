@@ -308,6 +308,9 @@ public class AStarPathfinder : MonoBehaviour {
 		} else {
 
 			//DONE
+
+            // retreive the path
+
 			Stack<AStarNode> tempWaypoints = new Stack<AStarNode>();
 
 			AStarNode n = destination;
