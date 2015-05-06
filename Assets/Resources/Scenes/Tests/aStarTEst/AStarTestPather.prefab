@@ -76,6 +76,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   desiredTarget: {fileID: 0}
   target: {fileID: 0}
+  waypointCounts: 0
 --- !u!114 &11437214
 MonoBehaviour:
   m_ObjectHideFlags: 1
