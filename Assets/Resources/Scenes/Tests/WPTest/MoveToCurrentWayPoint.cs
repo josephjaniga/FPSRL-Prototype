@@ -6,6 +6,7 @@ public class MoveToCurrentWayPoint : MonoBehaviour {
     Animator anim;
     public Target t;
     Transform currentWP;
+    public float movementSpeed = 1.5f;
 
 
 	// Use this for initialization
@@ -38,11 +39,23 @@ public class MoveToCurrentWayPoint : MonoBehaviour {
             if (Mathf.Abs(Vector3.Distance(gameObject.transform.position, normalized)) > 0.1f)
             {
                 // continue towards it
-                anim.SetBool("isMoving", true);
+                //anim.SetBool("isMoving", true);
+                
+                gameObject.transform.position = Vector3.MoveTowards(
+                            gameObject.transform.position, 
+                            currentWP.position, 
+                            movementSpeed * Time.deltaTime
+                        );
             }
             else
             {
-                anim.SetBool("isMoving", false);
+                //anim.SetBool("isMoving", false);
+                Destroy(currentWP.gameObject);
+                if ( t.waypointCounts > 0 && t.waypointQueue.Peek() != null)
+                {
+                    currentWP = t.waypointQueue.Dequeue();
+                }
+
             }
             
         }
