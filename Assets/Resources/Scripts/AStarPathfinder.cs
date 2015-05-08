@@ -18,6 +18,7 @@ public class AStarPathfinder : MonoBehaviour {
 
 	public Stack<AStarNode> waypoints = new Stack<AStarNode>();
 	public AStarNode[] waypointDisplay;
+    public Queue<Transform> waypointQueue = new Queue<Transform>();
 
 	public AStarNode bestChoice = null;
 
@@ -236,16 +237,13 @@ public class AStarPathfinder : MonoBehaviour {
 	
 
 	public void calculateCosts(AStarNode current, ref AStarNode testNode, AStarNode destination){
-
 		// FIXME: redo G cost - MovementCost
 		testNode.G = calculateMovementCost(testNode);
-
 		// heuristic cost
 		int xUnitsAway = Mathf.RoundToInt(Mathf.Abs( (testNode.pos.x - destination.pos.x) / testNode.unitSize ));
 		int zUnitsAway = Mathf.RoundToInt(Mathf.Abs( (testNode.pos.z - destination.pos.z) / testNode.unitSize ));
 		testNode.H = xUnitsAway * testNode.HV_cost + zUnitsAway * testNode.HV_cost;
 		testNode.F = testNode.G + testNode.H;
-
 	}
 
 	public int calculateMovementCost(AStarNode n){
@@ -268,8 +266,6 @@ public class AStarPathfinder : MonoBehaviour {
 	/**
 	 *  NEW PATHING
      */
-
-	
 	public void crunchPath(){
 		
 		if ( !closed.Contains(destination) && open.Count > 0 ){
@@ -307,17 +303,38 @@ public class AStarPathfinder : MonoBehaviour {
 
 		} else {
 
-			//DONE
+			// DONE - retreive the path
 
-            // retreive the path
-
+            Queue<Transform> tempQueue = new Queue<Transform>();
 			Stack<AStarNode> tempWaypoints = new Stack<AStarNode>();
 
+            // clear existing waypoints
+            // FIXME: clear ONLY THIS UNITS
+            while ( waypointQueue.Count > 0)
+            {
+                Transform tDestroyed = waypointQueue.Dequeue();
+                Destroy(tDestroyed.gameObject);
+                tDestroyed = waypointQueue.Dequeue();
+            }
+
+            // retreive the path backawards and flip it into a queue
 			AStarNode n = destination;
 			while ( n != null ){
 				tempWaypoints.Push(n);
 				n = n.parent;
+                if (n != null)
+                {
+                    Transform temporaryTransform = new GameObject().transform;
+                    temporaryTransform.SetParent(GameObject.Find("WayPoints").transform);
+                    temporaryTransform.position = n.pos;
+                    tempQueue.Enqueue(temporaryTransform);
+                }
 			}
+
+            // now we have a closest to path beggining queue of vector 3 positions
+            waypointQueue = new Queue<Transform>(tempQueue.Reverse());
+
+
 
 //			if ( waypoints != tempWaypoints ){
 //				waypoints.Clear();
