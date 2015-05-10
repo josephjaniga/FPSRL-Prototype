@@ -25,8 +25,8 @@ public class AStarPathfinder : MonoBehaviour {
 	public AStarNode bestChoice = null;
 
 	// path update speed
-	public float pathCalculateCD = 0.2f;
-	public float lastPathCalculate = -1f;
+	//	public float pathCalculateCD = 0.2f;
+	//	public float lastPathCalculate = -1f;
 
 	// Use this for initialization
 	void Start ()
@@ -42,19 +42,20 @@ public class AStarPathfinder : MonoBehaviour {
 			source = nearestNode(gameObject.transform.position);
 		}
 
-		if ( pathCalculateCD + lastPathCalculate <= Time.time && destination != null )
-        {
-			destination = nearestNode(gameObject.GetComponent<Target>().target.transform.position);
-			source = nearestNode(gameObject.transform.position);
-			current = source;
-			
-			clearLists();
-			open.Add(current);
-
-			crunchPath();
-			lastPathCalculate = Time.time;
-			destination = null;
-        }
+//
+//		if ( pathCalculateCD + lastPathCalculate <= Time.time && destination != null )
+//        {
+//			destination = nearestNode(gameObject.GetComponent<Target>().target.transform.position);
+//			source = nearestNode(gameObject.transform.position);
+//			current = source;
+//			
+//			clearLists();
+//			open.Add(current);
+//
+//			crunchPath();
+//			lastPathCalculate = Time.time;
+//			destination = null;
+//        }
 	}
 
 	public AStarNode nearestNode(Vector3 pos)
@@ -338,12 +339,15 @@ public class AStarPathfinder : MonoBehaviour {
 
             // now we have a closest to path beggining queue of vector 3 positions
             waypointQueue = new Queue<Transform>(tempQueue.Reverse());
-			
+
 			// AFTER PATH GENERATION
 			// if first waypoint has been reached remove it
 			if ( distanceToFirstWaypoint() <= REACHED_DISTANCE ){
 				waypointQueue.Dequeue();
 			}
+
+			Debug.Log (waypointQueue.Count);
+			gameObject.SendMessage("WaypointsPopulated", SendMessageOptions.DontRequireReceiver);
 
 			// now we have a closest to path beggining queue of vector 3 positions
 
@@ -381,7 +385,15 @@ public class AStarPathfinder : MonoBehaviour {
 				}
 			}
 		}
+	}
 
+	public void RecalculatePath(){
+		destination = nearestNode(gameObject.GetComponent<Target>().target.transform.position);
+		source = nearestNode(gameObject.transform.position);
+		current = source;
+		clearLists();
+		open.Add(current);
+		crunchPath();
 	}
 
 }

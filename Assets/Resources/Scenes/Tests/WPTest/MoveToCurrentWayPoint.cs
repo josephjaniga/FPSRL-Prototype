@@ -3,9 +3,11 @@ using System.Collections;
 
 public class MoveToCurrentWayPoint : MonoBehaviour {
 
+	public float REACHED_DISTANCE = 1f;
+
     Animator anim;
     public Target t;
-    Transform currentWP;
+    public Transform currentWP;
     public float movementSpeed = 1.5f;
     public AStarPathfinder asp;
 
@@ -22,9 +24,9 @@ public class MoveToCurrentWayPoint : MonoBehaviour {
         // if we dont have a waypoint and we have a target??
 
         // check and track curent waypoint
-        if ( currentWP == null && t.waypointCounts > 0 && t.waypointQueue.Peek() != null)
+		if ( currentWP == null && asp.waypointQueue.Count > 0 && asp.waypointQueue.Peek() != null)
         {
-            currentWP = t.waypointQueue.Peek();
+			currentWP = asp.waypointQueue.Dequeue();
         }
 
         if (currentWP != null)
@@ -35,25 +37,14 @@ public class MoveToCurrentWayPoint : MonoBehaviour {
             gameObject.transform.LookAt(normalized);
 
             // check if reached
-            if (Mathf.Abs(Vector3.Distance(gameObject.transform.position, normalized)) > 0.1f)
+			if ( Mathf.Abs(Vector3.Distance(gameObject.transform.position, normalized)) > REACHED_DISTANCE )
             {
                 // continue towards it
                 MoveTowardCurrentWayPoint();
             }
             else
             {
-                //anim.SetBool("isMoving", false);
-                Destroy(currentWP.gameObject);
-
-                if ( t.waypointCounts > 0 && t.waypointQueue.Peek() != null)
-                {
-                    currentWP = t.waypointQueue.Dequeue();
-                }
-                else
-                {
-                    currentWP = null;
-                }
-
+               currentWP = null;
             }
 
         }
@@ -78,4 +69,10 @@ public class MoveToCurrentWayPoint : MonoBehaviour {
                     movementSpeed * Time.deltaTime
                 );
     }
+
+	public void WaypointsPopulated(){
+		if ( asp.waypointQueue.Count > 0 && asp.waypointQueue.Peek() != null ){
+			currentWP = asp.waypointQueue.Dequeue();
+		}
+	}
 }
