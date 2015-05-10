@@ -74,7 +74,7 @@ public class aStarPathTowardTarget : MonoBehaviour {
 //
 //				if ( anim == null ){
 //					gameObject.transform.Translate( (normalizedWaypoint - gameObject.transform.position) * Time.deltaTime/4f );
-//				}
+//				
 			
 			} else {
 				//request a new waypoint

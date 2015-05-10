@@ -15,6 +15,8 @@ public class Target : MonoBehaviour {
         waypointCounts = waypointQueue.Count;
 		// raycast to desiredTarget
 		// if it can be seen, set it to the target
+
+
 	}
 	
 }

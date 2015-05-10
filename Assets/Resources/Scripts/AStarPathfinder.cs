@@ -5,6 +5,8 @@ using System.Collections.Generic;
 
 public class AStarPathfinder : MonoBehaviour {
 
+	public float REACHED_DISTANCE = 1f;
+
 	public AStarNodeManager asnm;
 
 	protected AStarNode concreteNode = new AStarNode();
@@ -310,12 +312,15 @@ public class AStarPathfinder : MonoBehaviour {
 
             // clear existing waypoints
             // FIXME: clear ONLY THIS UNITS
-            while ( waypointQueue.Count > 0)
+            while ( waypointQueue.Count > 0 )
             {
                 Transform tDestroyed = waypointQueue.Dequeue();
                 Destroy(tDestroyed.gameObject);
-                tDestroyed = waypointQueue.Dequeue();
             }
+
+			foreach ( Transform child in GameObject.Find("WayPoints").transform ){
+				Destroy(child.gameObject);
+			}
 
             // retreive the path backawards and flip it into a queue
 			AStarNode n = destination;
@@ -324,7 +329,7 @@ public class AStarPathfinder : MonoBehaviour {
 				n = n.parent;
                 if (n != null)
                 {
-                    Transform temporaryTransform = new GameObject().transform;
+					Transform temporaryTransform = new GameObject().transform;
                     temporaryTransform.SetParent(GameObject.Find("WayPoints").transform);
                     temporaryTransform.position = n.pos;
                     tempQueue.Enqueue(temporaryTransform);
@@ -333,20 +338,31 @@ public class AStarPathfinder : MonoBehaviour {
 
             // now we have a closest to path beggining queue of vector 3 positions
             waypointQueue = new Queue<Transform>(tempQueue.Reverse());
+			
+			// AFTER PATH GENERATION
+			// if first waypoint has been reached remove it
+			if ( distanceToFirstWaypoint() <= REACHED_DISTANCE ){
+				waypointQueue.Dequeue();
+			}
 
+			// now we have a closest to path beggining queue of vector 3 positions
 
+			Queue<Transform> wpvis = waypointQueue;
+			GameObject prefab = Resources.Load ("Scenes/Tests/WPTest/Waypoint") as GameObject;
 
-//			if ( waypoints != tempWaypoints ){
-//				waypoints.Clear();
-//				waypoints = tempWaypoints;
-//				waypointDisplay = new AStarNode[waypoints.Count];
-//				waypointDisplay = waypoints.ToArray();
-//				gameObject.SendMessage("PathCalculated", SendMessageOptions.DontRequireReceiver);
-//			}
-
-
+			while ( wpvis.Count > 0 )
+			{
+				Transform xyz = wpvis.Dequeue();
+              	Transform visualizedWP = (Instantiate(prefab, Vector3.zero, Quaternion.identity) as GameObject).transform;
+				visualizedWP.SetParent(GameObject.Find("WayPoints").transform);
+				visualizedWP.position = xyz.position;
+			}
+			
 		}
-
+	}
+		
+    public float distanceToFirstWaypoint(){
+		return Mathf.Abs(Vector3.Distance(gameObject.transform.position, waypointQueue.Peek().position));
 	}
 
 	public void setBestChoice(){

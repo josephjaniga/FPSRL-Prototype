@@ -72,7 +72,6 @@ public class MoveToCurrentWayPoint : MonoBehaviour {
     {
         // TODO: IMPLEMENT THIS BASED ON THE ACTUAL UNIT MOTION
         // anim.SetBool("isMoving", true);
-
         gameObject.transform.position = Vector3.MoveTowards(
                     gameObject.transform.position,
                     currentWP.position,
