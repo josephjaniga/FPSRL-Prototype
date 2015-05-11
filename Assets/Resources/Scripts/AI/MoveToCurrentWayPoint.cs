@@ -3,7 +3,7 @@ using System.Collections;
 
 public class MoveToCurrentWayPoint : MonoBehaviour {
 
-	public float REACHED_DISTANCE = 1f;
+	public float REACHED_DISTANCE = 0.5f;
 
     Animator anim;
     public Target t;
@@ -24,9 +24,9 @@ public class MoveToCurrentWayPoint : MonoBehaviour {
         // if we dont have a waypoint and we have a target??
 
         // check and track curent waypoint
-		if ( currentWP == null && asp.waypointQueue.Count > 0 && asp.waypointQueue.Peek() != null)
+		if ( currentWP == null && t.waypointQueue.Count > 0 && t.waypointQueue.Peek() != null)
         {
-			currentWP = asp.waypointQueue.Dequeue();
+			currentWP = t.waypointQueue.Dequeue();
         }
 
         if (currentWP != null)
@@ -44,7 +44,8 @@ public class MoveToCurrentWayPoint : MonoBehaviour {
             }
             else
             {
-               currentWP = null;
+				anim.SetFloat("Forward", 0.0f);
+               	currentWP = null;
             }
 
         }
@@ -62,12 +63,12 @@ public class MoveToCurrentWayPoint : MonoBehaviour {
     public void MoveTowardCurrentWayPoint()
     {
         // TODO: IMPLEMENT THIS BASED ON THE ACTUAL UNIT MOTION
-        // anim.SetBool("isMoving", true);
-        gameObject.transform.position = Vector3.MoveTowards(
-                    gameObject.transform.position,
-                    currentWP.position,
-                    movementSpeed * Time.deltaTime
-                );
+		anim.SetFloat("Forward", 1.0f);
+//        gameObject.transform.position = Vector3.MoveTowards(
+//                    gameObject.transform.position,
+//                    currentWP.position,
+//                    movementSpeed * Time.deltaTime
+//                );
     }
 
 	public void WaypointsPopulated(){

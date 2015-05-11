@@ -94,8 +94,8 @@ GameObject:
   - 114: {fileID: 11450438}
   - 114: {fileID: 11424510}
   - 114: {fileID: 11464166}
-  - 114: {fileID: 11499606}
   - 114: {fileID: 11454548}
+  - 114: {fileID: 11458912}
   m_Layer: 0
   m_Name: RiggedRobot
   m_TagString: Untagged
@@ -912,6 +912,29 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   desiredTarget: {fileID: 0}
   target: {fileID: 0}
+  waypointCounts: 0
+  lastNearest:
+    parentPosition: {x: 0, y: 0, z: 0}
+    HV_cost: 10
+    D_cost: 14
+    unitSize: 2
+    walkable: 1
+    F: 0
+    G: 0
+    H: 0
+    pos: {x: 0, y: 0, z: 0}
+    nodeName: 
+  thisNearest:
+    parentPosition: {x: 0, y: 0, z: 0}
+    HV_cost: 10
+    D_cost: 14
+    unitSize: 2
+    walkable: 1
+    F: 0
+    G: 0
+    H: 0
+    pos: {x: 0, y: 0, z: 0}
+    nodeName: 
 --- !u!114 &11436122
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -949,6 +972,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 423a0763318370949bf82662f48d108b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  REACHED_DISTANCE: .100000001
   asnm: {fileID: 0}
   source:
     parentPosition: {x: 0, y: 0, z: 0}
@@ -997,8 +1021,22 @@ MonoBehaviour:
     H: 0
     pos: {x: 0, y: 0, z: 0}
     nodeName: 
-  pathCalculateCD: .200000003
-  lastPathCalculate: -1
+--- !u!114 &11458912
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 120344}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff62416903e2f9f46bab062c9227f202, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  REACHED_DISTANCE: .100000001
+  t: {fileID: 0}
+  currentWP: {fileID: 0}
+  movementSpeed: 1.5
+  asp: {fileID: 0}
 --- !u!114 &11464166
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -1028,34 +1066,6 @@ MonoBehaviour:
   currentHealth: 0
   maximumShields: 0
   currentShields: 0
---- !u!114 &11499606
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 120344}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ce1889cfd14fa2d4d93482590b67075e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  t: {fileID: 0}
-  asp: {fileID: 0}
-  speed: .100000001
-  pathUpdateCD: 1
-  lastPathUpdate: -1
-  currentWaypoint:
-    parentPosition: {x: 0, y: 0, z: 0}
-    HV_cost: 10
-    D_cost: 14
-    unitSize: 2
-    walkable: 1
-    F: 0
-    G: 0
-    H: 0
-    pos: {x: 0, y: 0, z: 0}
-    nodeName: 
-  normalizedWaypoint: {x: 0, y: 0, z: 0}
 --- !u!136 &13654164
 CapsuleCollider:
   m_ObjectHideFlags: 1

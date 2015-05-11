@@ -15,7 +15,10 @@ public class AStarNode : System.Object {
         set
         {
             _parent = value;
-            parentPosition = value.pos;
+			if ( value != null ){
+				parentPosition = value.pos;
+			}
+            
         }
     }
 

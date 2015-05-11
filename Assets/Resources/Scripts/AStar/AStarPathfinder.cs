@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 public class AStarPathfinder : MonoBehaviour {
 
-	public float REACHED_DISTANCE = 1f;
+	public float REACHED_DISTANCE = 0.5f;
 
 	public AStarNodeManager asnm;
 
@@ -237,7 +237,6 @@ public class AStarPathfinder : MonoBehaviour {
 		open    = new List<AStarNode>();
 		closed  = new List<AStarNode>();
 	}
-	
 
 	public void calculateCosts(AStarNode current, ref AStarNode testNode, AStarNode destination){
 		// FIXME: redo G cost - MovementCost
@@ -313,11 +312,13 @@ public class AStarPathfinder : MonoBehaviour {
 
             // clear existing waypoints
             // FIXME: clear ONLY THIS UNITS
-            while ( waypointQueue.Count > 0 )
-            {
-                Transform tDestroyed = waypointQueue.Dequeue();
-                Destroy(tDestroyed.gameObject);
-            }
+//            while ( waypointQueue.Count > 0 )
+//            {
+//                Transform tDestroyed = waypointQueue.Dequeue();
+//				if( tDestroyed.gameObject != null ){
+//					Destroy(tDestroyed.gameObject);
+//				}
+//            }
 
 			foreach ( Transform child in GameObject.Find("WayPoints").transform ){
 				Destroy(child.gameObject);
@@ -325,12 +326,15 @@ public class AStarPathfinder : MonoBehaviour {
 
             // retreive the path backawards and flip it into a queue
 			AStarNode n = destination;
+			GameObject prefab = Resources.Load ("Scenes/Tests/WPTest/Waypoint") as GameObject;
 			while ( n != null ){
 				tempWaypoints.Push(n);
 				n = n.parent;
                 if (n != null)
                 {
 					Transform temporaryTransform = new GameObject().transform;
+						// (Instantiate(prefab, Vector3.zero, Quaternion.identity) as GameObject).transform;
+						// new GameObject().transform;
                     temporaryTransform.SetParent(GameObject.Find("WayPoints").transform);
                     temporaryTransform.position = n.pos;
                     tempQueue.Enqueue(temporaryTransform);
@@ -340,27 +344,32 @@ public class AStarPathfinder : MonoBehaviour {
             // now we have a closest to path beggining queue of vector 3 positions
             waypointQueue = new Queue<Transform>(tempQueue.Reverse());
 
-			// AFTER PATH GENERATION
-			// if first waypoint has been reached remove it
-			if ( distanceToFirstWaypoint() <= REACHED_DISTANCE ){
-				waypointQueue.Dequeue();
-			}
+			gameObject.GetComponent<Target>().waypointQueue = waypointQueue;
+		
+			// clearLists all parented nodes
+			asnm.resetParents();
 
-			Debug.Log (waypointQueue.Count);
-			gameObject.SendMessage("WaypointsPopulated", SendMessageOptions.DontRequireReceiver);
-
-			// now we have a closest to path beggining queue of vector 3 positions
-
-			Queue<Transform> wpvis = waypointQueue;
-			GameObject prefab = Resources.Load ("Scenes/Tests/WPTest/Waypoint") as GameObject;
-
-			while ( wpvis.Count > 0 )
-			{
-				Transform xyz = wpvis.Dequeue();
-              	Transform visualizedWP = (Instantiate(prefab, Vector3.zero, Quaternion.identity) as GameObject).transform;
-				visualizedWP.SetParent(GameObject.Find("WayPoints").transform);
-				visualizedWP.position = xyz.position;
-			}
+//			// AFTER PATH GENERATION
+//			// if first waypoint has been reached remove it
+//			if ( distanceToFirstWaypoint() <= REACHED_DISTANCE ){
+//				waypointQueue.Dequeue();
+//			}
+//
+//			Debug.Log (waypointQueue.Count);
+//			gameObject.SendMessage("WaypointsPopulated", SendMessageOptions.DontRequireReceiver);
+//
+//			// now we have a closest to path beggining queue of vector 3 positions
+//
+//			Queue<Transform> wpvis = waypointQueue;
+//			GameObject prefab = Resources.Load ("Scenes/Tests/WPTest/Waypoint") as GameObject;
+//
+//			while ( wpvis.Count > 0 )
+//			{
+//				Transform xyz = wpvis.Dequeue();
+//              Transform visualizedWP = (Instantiate(prefab, Vector3.zero, Quaternion.identity) as GameObject).transform;
+//				visualizedWP.SetParent(GameObject.Find("WayPoints").transform);
+//				visualizedWP.position = xyz.position;
+//			}
 			
 		}
 	}

@@ -18,9 +18,15 @@ public class Target : MonoBehaviour {
         waypointCounts = waypointQueue.Count;
 
 		// if target moves adjust path
-		thisNearest = nearestNode(target.gameObject.transform.position);
+		if ( target != null ){
+			thisNearest = nearestNode(target.gameObject.transform.position);
+		} else {
+			thisNearest = null;
+			lastNearest = null;
+		}
+
 		if ( lastNearest != thisNearest ){
-			Debug.Log("target moved");
+			//Debug.Log("target moved");
 			gameObject.SendMessage("RecalculatePath", SendMessageOptions.DontRequireReceiver);
 			lastNearest = thisNearest;
 		}

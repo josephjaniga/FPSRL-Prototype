@@ -23,4 +23,10 @@ public class AStarNodeManager : MonoBehaviour {
         return temp;
     }
 
+	public void resetParents(){
+		foreach ( AStarNode node in all ){
+			node.parent = null;
+		}
+	}
+
 }
