@@ -27,6 +27,47 @@ public static class _
 	private static GameObject	_levelGeometry;
 	private static GameObject	_mapper;
 
+    // A* Pathing
+    private static GameObject   _aStar;
+    private static GameObject   _waypoints;
+
+    public static GameObject waypoints
+    {
+        get
+        {
+            GameObject temp = GameObject.Find("WayPoints");
+            if (_waypoints == null)
+            {
+                if (temp == null)
+                {
+                    temp = GameObject.Instantiate(Resources.Load("Prefabs/Setup/WayPoints"), Vector3.zero, Quaternion.identity) as GameObject;
+                    temp.name = "WayPoints";
+                }
+                _waypoints = temp;
+            }
+            return _waypoints;
+        }
+        set { _waypoints = value; }
+    }
+
+    public static GameObject aStar
+    {
+        get {
+            GameObject temp = GameObject.Find("A*");
+            if (_aStar == null)
+            {
+                if (temp == null)
+                {
+                    temp = GameObject.Instantiate(Resources.Load("Prefabs/Setup/aStar"), Vector3.zero, Quaternion.identity) as GameObject;
+                    temp.name = "A*";
+                }
+                _aStar = temp;
+            }
+            return _aStar;
+        }
+        set { _aStar = value; }
+    }
+
 
 	// player
 	public static GameObject player
