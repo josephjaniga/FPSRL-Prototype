@@ -26,10 +26,30 @@ public static class _
 	private static GameObject	_stuff;
 	private static GameObject	_levelGeometry;
 	private static GameObject	_mapper;
+    private static GameObject   _theNet;
 
     // A* Pathing
     private static GameObject   _aStar;
     private static GameObject   _waypoints;
+
+    public static GameObject theNet
+    {
+        get
+        {
+            GameObject temp = GameObject.Find("theNet");
+            if (_theNet == null)
+            {
+                if (temp == null)
+                {
+                    temp = GameObject.Instantiate(Resources.Load("Prefabs/Setup/theNet"), Vector3.zero, Quaternion.identity) as GameObject;
+                    temp.name = "theNet";
+                }
+                _theNet = temp;
+            }
+            return _theNet;
+        }
+        set { _theNet = value; }
+    }
 
     public static GameObject waypoints
     {

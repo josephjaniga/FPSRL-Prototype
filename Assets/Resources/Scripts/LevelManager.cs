@@ -14,6 +14,7 @@ public class LevelManager : MonoBehaviour {
 	public GameObject stuff;
 	public GameObject levelGeometry;
 	public GameObject mapper;
+    public GameObject theNet;
 
     // a star pathfinding helpers
     public GameObject aStar;
@@ -54,6 +55,7 @@ public class LevelManager : MonoBehaviour {
 
         aStar = _.aStar;
         waypoints = _.waypoints;
+        theNet = _.theNet;
 
 	}
 
