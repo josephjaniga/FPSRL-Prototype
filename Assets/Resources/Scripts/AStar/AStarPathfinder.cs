@@ -60,7 +60,7 @@ public class AStarPathfinder : MonoBehaviour {
 
 	public AStarNode nearestNode(Vector3 pos)
 	{
-		asnm = GameObject.Find ("A*").GetComponent<AStarNodeManager>();
+		asnm = _.aStar.GetComponent<AStarNodeManager>();
 		AStarNode nearest = null;
 
 		for ( int i=0; i < asnm.all.Count; i++ ){
@@ -320,7 +320,7 @@ public class AStarPathfinder : MonoBehaviour {
 //				}
 //            }
 
-			foreach ( Transform child in GameObject.Find("WayPoints").transform ){
+			foreach ( Transform child in _.waypoints.transform ){
 				Destroy(child.gameObject);
 			}
 
@@ -335,7 +335,7 @@ public class AStarPathfinder : MonoBehaviour {
 					Transform temporaryTransform = new GameObject().transform;
 						// (Instantiate(prefab, Vector3.zero, Quaternion.identity) as GameObject).transform;
 						// new GameObject().transform;
-                    temporaryTransform.SetParent(GameObject.Find("WayPoints").transform);
+                    temporaryTransform.SetParent(_.waypoints.transform);
                     temporaryTransform.position = n.pos;
                     tempQueue.Enqueue(temporaryTransform);
                 }

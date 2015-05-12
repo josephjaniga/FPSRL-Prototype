@@ -15,6 +15,10 @@ public class LevelManager : MonoBehaviour {
 	public GameObject levelGeometry;
 	public GameObject mapper;
 
+    // a star pathfinding helpers
+    public GameObject aStar;
+    public GameObject waypoints;
+
 	// Use this for initialization
 	void Start () {
 		init ();
@@ -47,6 +51,9 @@ public class LevelManager : MonoBehaviour {
 		effects = _.effects;
 		levelGeometry = _.levelGeometry;
 		mapper = _.mapper;
+
+        aStar = _.aStar;
+        waypoints = _.waypoints;
 
 	}
 

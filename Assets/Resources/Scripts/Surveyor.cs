@@ -117,7 +117,7 @@ public class Surveyor : MonoBehaviour {
 		omega = null;
 
         // TODO: wipe the A* Nodes
-        Transform aStar = GameObject.Find("A*").transform;
+        Transform aStar = _.aStar.transform;
 
         foreach (Transform child in aStar)
         {
